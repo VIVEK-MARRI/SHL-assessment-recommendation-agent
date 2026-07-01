@@ -14,6 +14,9 @@ class RetrievedAssessment(BaseModel):
     url: str = Field(min_length=1)
     test_type: str = ""
     score: float
+    rrf_score: float | None = Field(default=None, ge=0.0)
+    embedding_score: float | None = None
+    bm25_score: float | None = None
     rank: int = Field(ge=1)
     embedding_rank: int | None = Field(default=None, ge=1)
     bm25_rank: int | None = Field(default=None, ge=1)
@@ -50,3 +53,25 @@ class BM25RetrieverHealth(BaseModel):
     tokenizer_version: str | None = None
     catalog_sha256: str | None = None
     average_query_latency_ms: float | None = None
+
+
+class HybridRetrievalResult(BaseModel):
+    """Hybrid retrieval payload with confidence metadata."""
+
+    results: list[RetrievedAssessment]
+    confidence: str
+    reason: str
+
+
+class HybridRetrieverHealth(BaseModel):
+    """Runtime health details for the hybrid retrieval engine."""
+
+    embedding_ready: bool
+    bm25_ready: bool
+    rrf_ready: bool
+    catalog_sha256: str | None = None
+    embedding_model: str | None = None
+    tokenizer_version: str | None = None
+    embedding_latency_ms: float | None = None
+    bm25_latency_ms: float | None = None
+    average_latency_ms: float | None = None
