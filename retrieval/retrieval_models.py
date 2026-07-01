@@ -1,4 +1,4 @@
-"""Typed models for semantic retrieval results and health checks."""
+"""Typed models for retrieval results and health checks."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class RetrievedAssessment(BaseModel):
-    """Ranked semantic retrieval candidate resolved from FAISS metadata."""
+    """Ranked retrieval candidate resolved from persisted index metadata."""
 
     retrieval_source: str = "embedding"
     entity_id: str = Field(min_length=1)
@@ -15,7 +15,8 @@ class RetrievedAssessment(BaseModel):
     test_type: str = ""
     score: float
     rank: int = Field(ge=1)
-    embedding_rank: int = Field(ge=1)
+    embedding_rank: int | None = Field(default=None, ge=1)
+    bm25_rank: int | None = Field(default=None, ge=1)
     job_levels: list[str] = Field(default_factory=list)
     languages: list[str] = Field(default_factory=list)
     duration: str = ""
@@ -37,4 +38,15 @@ class EmbeddingRetrieverHealth(BaseModel):
     embedding_dimension: int | None = None
     number_of_indexed_assessments: int = 0
     catalog_sha: str | None = None
+    average_query_latency_ms: float | None = None
+
+
+class BM25RetrieverHealth(BaseModel):
+    """Runtime health details for the lexical BM25 retriever."""
+
+    bm25_loaded: bool
+    corpus_loaded: bool
+    document_count: int = 0
+    tokenizer_version: str | None = None
+    catalog_sha256: str | None = None
     average_query_latency_ms: float | None = None

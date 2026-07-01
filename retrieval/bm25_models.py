@@ -21,6 +21,16 @@ class BM25DocumentRecord(BaseModel):
     entity_id: str = Field(min_length=1)
     document: str = Field(min_length=1, description="Raw document text before tokenization.")
     tokens: list[str] = Field(description="Tokenized form used to build BM25.")
+    name: str | None = None
+    url: str | None = None
+    test_type: str = ""
+    keys: list[str] = Field(default_factory=list)
+    job_levels: list[str] = Field(default_factory=list)
+    languages: list[str] = Field(default_factory=list)
+    duration: str = ""
+    duration_minutes: int | None = None
+    remote: bool = True
+    adaptive: bool = False
 
 
 class BM25Config(BaseModel):

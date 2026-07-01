@@ -15,6 +15,7 @@ from __future__ import annotations
 import json
 import logging
 import pickle
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -35,6 +36,25 @@ logger = logging.getLogger(__name__)
 
 class BM25IndexError(Exception):
     """Raised when BM25 index construction or persistence fails."""
+
+
+_DURATION_RE = re.compile(r"(\d+)")
+
+
+def _derive_test_type(keys: list[str]) -> str:
+    """Derive a pipe-joined test type code string from category keys."""
+    from catalog.constants import KEY_TO_TEST_TYPE_MAP
+
+    codes = [KEY_TO_TEST_TYPE_MAP[k] for k in keys if k in KEY_TO_TEST_TYPE_MAP]
+    return "|".join(dict.fromkeys(codes))
+
+
+def _parse_duration_minutes(duration: str) -> int | None:
+    """Extract the first integer minute value from a duration string."""
+    if not duration or duration.lower() in ("untimed", "variable", "unknown"):
+        return None
+    match = _DURATION_RE.search(duration)
+    return int(match.group(1)) if match else None
 
 
 def build_bm25_index(token_corpus: list[list[str]]) -> BM25Okapi:
@@ -181,6 +201,16 @@ def build_document_records(
             entity_id=assessments[i].entity_id,
             document=documents[i],
             tokens=token_corpus[i],
+            name=assessments[i].name,
+            url=assessments[i].link,
+            test_type=_derive_test_type(assessments[i].keys),
+            keys=list(assessments[i].keys),
+            job_levels=list(assessments[i].job_levels),
+            languages=list(assessments[i].languages),
+            duration=assessments[i].duration,
+            duration_minutes=_parse_duration_minutes(assessments[i].duration),
+            remote=assessments[i].remote,
+            adaptive=assessments[i].adaptive,
         )
         for i in range(n)
     ]
