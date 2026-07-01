@@ -1,0 +1,44 @@
+[
+  {
+    "conversation": [
+      {"role": "user", "content": "I need a Python assessment for senior engineers."}
+    ],
+    "expected_state": {
+      "intent": "recommend",
+      "scope_flag": "recommend",
+      "job_levels": ["senior"],
+      "languages": [],
+      "mentioned_assessment_names": [],
+      "is_comparison_request": false,
+      "end_of_conversation": false
+    }
+  },
+  {
+    "conversation": [
+      {"role": "user", "content": "Compare OPQ32r and Hogan for leadership roles."}
+    ],
+    "expected_state": {
+      "intent": "compare",
+      "scope_flag": "compare",
+      "job_levels": ["manager"],
+      "languages": [],
+      "mentioned_assessment_names": ["OPQ32r", "Hogan"],
+      "is_comparison_request": true,
+      "end_of_conversation": false
+    }
+  },
+  {
+    "conversation": [
+      {"role": "user", "content": "What cognitive tests do you have in Spanish?"}
+    ],
+    "expected_state": {
+      "intent": "recommend",
+      "scope_flag": "recommend",
+      "job_levels": [],
+      "languages": ["Spanish"],
+      "mentioned_assessment_names": [],
+      "is_comparison_request": false,
+      "end_of_conversation": false
+    }
+  }
+]

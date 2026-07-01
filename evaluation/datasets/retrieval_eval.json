@@ -1,0 +1,42 @@
+[
+  {
+    "query": "Python assessment for software engineers",
+    "relevant_names": [
+      "Python (New)",
+      "Core Java (Advanced Level)",
+      "Automata Fix (Python)"
+    ]
+  },
+  {
+    "query": "cognitive ability test for graduate hiring",
+    "relevant_names": [
+      "Verify - G+ General Ability",
+      "Verify Interactive - G+",
+      "Verify - Numerical Ability"
+    ]
+  },
+  {
+    "query": "personality assessment for sales role",
+    "relevant_names": [
+      "OPQ32r",
+      "Occupational Personality Questionnaire OPQ32",
+      "Sales Solution"
+    ]
+  },
+  {
+    "query": "SQL database test for mid-level engineers",
+    "relevant_names": [
+      "SQL (Intermediate Level)",
+      "SQL (New)",
+      "MySQL"
+    ]
+  },
+  {
+    "query": "leadership and management assessment",
+    "relevant_names": [
+      "Leadership Report",
+      "Occupational Personality Questionnaire OPQ32",
+      "OPQ32r"
+    ]
+  }
+]

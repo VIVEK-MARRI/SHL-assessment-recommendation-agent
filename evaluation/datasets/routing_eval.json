@@ -1,0 +1,52 @@
+[
+  {
+    "conversation": [
+      {"role": "user", "content": "I need a Python test for senior backend engineers."}
+    ],
+    "expected_route": "RECOMMEND"
+  },
+  {
+    "conversation": [
+      {"role": "user", "content": "Can you compare OPQ32r and Hogan assessments?"}
+    ],
+    "expected_route": "COMPARE"
+  },
+  {
+    "conversation": [
+      {"role": "user", "content": "What do you know about the weather?"}
+    ],
+    "expected_route": "REFUSE"
+  },
+  {
+    "conversation": [
+      {"role": "user", "content": "I need an assessment."}
+    ],
+    "expected_route": "CLARIFY"
+  },
+  {
+    "conversation": [
+      {"role": "user", "content": "I need a cognitive test for graduate hiring."},
+      {"role": "assistant", "content": "What job level is this for?"},
+      {"role": "user", "content": "Only for entry-level roles, preferably in English."}
+    ],
+    "expected_route": "REFINE"
+  },
+  {
+    "conversation": [
+      {"role": "user", "content": "Show me Java and SQL assessments."}
+    ],
+    "expected_route": "RECOMMEND"
+  },
+  {
+    "conversation": [
+      {"role": "user", "content": "Which is better: Verify G+ or CCAT?"}
+    ],
+    "expected_route": "COMPARE"
+  },
+  {
+    "conversation": [
+      {"role": "user", "content": "Can you help me write a cover letter?"}
+    ],
+    "expected_route": "REFUSE"
+  }
+]

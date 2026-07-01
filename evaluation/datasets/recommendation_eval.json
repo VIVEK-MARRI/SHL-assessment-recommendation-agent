@@ -1,0 +1,29 @@
+[
+  {
+    "conversation": [
+      {"role": "user", "content": "I need a Python assessment for senior software engineers."}
+    ],
+    "expected_names": [
+      "Python (New)",
+      "Core Java (Advanced Level)"
+    ]
+  },
+  {
+    "conversation": [
+      {"role": "user", "content": "Recommend cognitive ability tests for graduate hiring in English."}
+    ],
+    "expected_names": [
+      "Verify - G+ General Ability",
+      "Verify Interactive - G+"
+    ]
+  },
+  {
+    "conversation": [
+      {"role": "user", "content": "I need a personality assessment for a sales manager position."}
+    ],
+    "expected_names": [
+      "OPQ32r",
+      "Sales Solution"
+    ]
+  }
+]
