@@ -1,4 +1,4 @@
-﻿# SHL Assessment Recommendation Agent
+# SHL Assessment Recommendation Agent
 
 ![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=flat-square&logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?style=flat-square&logo=fastapi&logoColor=white)
@@ -7,6 +7,20 @@
 ![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 
 A production-grade conversational RAG system that recommends SHL Individual Test Solutions. Built around a strictly deterministic pipeline — hybrid retrieval, rule-based routing, and catalog-grounded generation — designed to eliminate hallucinations structurally.
+
+---
+
+## Live Deployment
+
+The application is publicly accessible and deployed on Railway.
+
+| Resource | URL |
+|---|---|
+| **Live API** | [https://shl-assessment-recommendation-agent-production.up.railway.app](https://shl-assessment-recommendation-agent-production.up.railway.app) |
+| **Swagger UI** | [https://shl-assessment-recommendation-agent-production.up.railway.app/docs](https://shl-assessment-recommendation-agent-production.up.railway.app/docs) |
+| **OpenAPI Specification** | [https://shl-assessment-recommendation-agent-production.up.railway.app/openapi.json](https://shl-assessment-recommendation-agent-production.up.railway.app/openapi.json) |
+| **Health Check** | [https://shl-assessment-recommendation-agent-production.up.railway.app/health](https://shl-assessment-recommendation-agent-production.up.railway.app/health) |
+| **Chat Endpoint** | `POST` [https://shl-assessment-recommendation-agent-production.up.railway.app/chat](https://shl-assessment-recommendation-agent-production.up.railway.app/chat) |
 
 ---
 
