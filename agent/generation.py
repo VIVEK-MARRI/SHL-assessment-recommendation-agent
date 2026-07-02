@@ -10,6 +10,7 @@ from agent.conversation_advisor import (
     CatalogLimitationHandler,
     CatalogRelationshipResolver,
     ConfirmationDetector,
+    LegalDisclaimerHandler,
 )
 from agent.generation_client import (
     GenerationClient,
@@ -98,6 +99,7 @@ class ResponseGenerator:
         self._relationship_resolver = CatalogRelationshipResolver()
         self._confirmation_detector = ConfirmationDetector()
         self._catalog_limitation_handler = CatalogLimitationHandler()
+        self._legal_handler = LegalDisclaimerHandler()
 
     def generate(self, package: PromptPackage) -> LLMGenerationResult:
         """Call the LLM and return a parsed LLMGenerationResult, with up to 1 retry."""
@@ -272,6 +274,26 @@ class ResponseGenerator:
                                 reply=validated.reply,
                                 recommended_names=validated.recommended_names,
                                 end_of_conversation=True,
+                                provider=validated.provider,
+                                model=validated.model,
+                                latency_ms=validated.latency_ms,
+                                tokens_prompt=validated.tokens_prompt,
+                                tokens_completion=validated.tokens_completion,
+                                tokens_total=validated.tokens_total,
+                                finish_reason=validated.finish_reason,
+                            )
+
+                    # Post-processing: legal compliance disclaimer
+                    if package.route in (RouteType.RECOMMEND, RouteType.COMPARE, RouteType.CLARIFY):
+                        last_user_msg = _extract_last_user_message(package.user_prompt)
+                        if self._legal_handler.is_legal_compliance_question(last_user_msg):
+                            logger.info(
+                                "Legal compliance question detected, applying disclaimer"
+                            )
+                            validated = LLMGenerationResult(
+                                reply=self._legal_handler.format_disclaimer_response(validated.reply),
+                                recommended_names=validated.recommended_names,
+                                end_of_conversation=validated.end_of_conversation,
                                 provider=validated.provider,
                                 model=validated.model,
                                 latency_ms=validated.latency_ms,

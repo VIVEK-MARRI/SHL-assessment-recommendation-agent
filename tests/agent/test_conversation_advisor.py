@@ -1005,3 +1005,150 @@ class TestClarificationStrategy:
         state = ConversationState(role="Engineer")
         decision = router.route(state)
         assert decision.route == RouteType.RECOMMEND
+
+
+# =========================================================================
+# 18. Legal / Compliance disclaimer
+# =========================================================================
+
+class TestLegalDisclaimer:
+    """Tests for legal/compliance question handling."""
+
+    def _make_handler(self) -> object:
+        from agent.conversation_advisor import LegalDisclaimerHandler
+        return LegalDisclaimerHandler()
+
+    def test_handler_detects_eeoc(self) -> None:
+        handler = self._make_handler()
+        assert handler.is_legal_compliance_question("Is OPQ32r EEOC compliant?")
+
+    def test_handler_detects_ada(self) -> None:
+        handler = self._make_handler()
+        assert handler.is_legal_compliance_question("Does this assessment meet ADA requirements?")
+
+    def test_handler_detects_regulatory(self) -> None:
+        handler = self._make_handler()
+        assert handler.is_legal_compliance_question("Does Verify G+ satisfy regulatory compliance?")
+
+    def test_handler_detects_legal_required(self) -> None:
+        handler = self._make_handler()
+        assert handler.is_legal_compliance_question("Is this assessment legally required for hiring?")
+
+    def test_handler_does_not_flag_normal(self) -> None:
+        handler = self._make_handler()
+        assert not handler.is_legal_compliance_question("I need a Python developer assessment")
+
+    def test_handler_does_not_flag_comparison(self) -> None:
+        handler = self._make_handler()
+        assert not handler.is_legal_compliance_question("Compare OPQ32r and Verify G+")
+
+    def test_disclaimer_appended(self) -> None:
+        from agent.conversation_advisor import LegalDisclaimerHandler, LEGAL_DISCLAIMER
+        handler = LegalDisclaimerHandler()
+        result = handler.format_disclaimer_response("Here is the assessment info.")
+        assert LEGAL_DISCLAIMER in result
+        assert "Here is the assessment info." in result
+
+    def test_disclaimer_deduplicates(self) -> None:
+        from agent.conversation_advisor import LegalDisclaimerHandler, LEGAL_DISCLAIMER
+        handler = LegalDisclaimerHandler()
+        original = f"{LEGAL_DISCLAIMER}\n\nAdditional details."
+        result = handler.format_disclaimer_response(original)
+        assert result == original
+
+    def test_disclaimer_empty_original(self) -> None:
+        from agent.conversation_advisor import LegalDisclaimerHandler, LEGAL_DISCLAIMER
+        handler = LegalDisclaimerHandler()
+        result = handler.format_disclaimer_response()
+        assert result == LEGAL_DISCLAIMER
+
+    def test_generation_injects_legal_disclaimer(self) -> None:
+        """Verify legal question detection post-processes the LLM response."""
+        client = _make_simple_client(
+            '{"reply": "Here is info about OPQ32r.", "recommended_names": ["OPQ32r"], "end_of_conversation": false}'
+        )
+        from agent.generation import ResponseGenerator
+        from agent.prompt_models import GroundingAssessment, PromptPackage, PromptMetadata
+        from agent.routing_models import RouteType
+        generator = ResponseGenerator(client=client)
+        package = PromptPackage(
+            system_prompt="You are an SHL consultant.",
+            user_prompt="User:\nIs OPQ32r EEOC compliant?",
+            route=RouteType.RECOMMEND,
+            grounding_assessments=[
+                GroundingAssessment(
+                    name="OPQ32r",
+                    description="Personality assessment",
+                    duration="25 min",
+                    job_levels=["Mid"],
+                    languages=["English"],
+                    remote=True,
+                    adaptive=False,
+                    test_type=["Personality"],
+                    link="http://opq",
+                ),
+            ],
+            metadata=PromptMetadata(prompt_version="1.0", route=RouteType.RECOMMEND.value),
+        )
+        from agent.conversation_advisor import LEGAL_DISCLAIMER
+        result = generator.generate(package)
+        assert LEGAL_DISCLAIMER in result.reply
+
+    def test_legal_disclaimer_not_injected_for_normal_queries(self) -> None:
+        """Non-legal queries should not get the disclaimer."""
+        client = _make_simple_client(
+            '{"reply": "Here are Java assessments.", "recommended_names": ["Java"], "end_of_conversation": false}'
+        )
+        from agent.generation import ResponseGenerator
+        from agent.prompt_models import GroundingAssessment, PromptPackage, PromptMetadata
+        from agent.routing_models import RouteType
+        from agent.conversation_advisor import LEGAL_DISCLAIMER
+        generator = ResponseGenerator(client=client)
+        package = PromptPackage(
+            system_prompt="You are an SHL consultant.",
+            user_prompt="User:\nRecommend Java assessments",
+            route=RouteType.RECOMMEND,
+            grounding_assessments=[
+                GroundingAssessment(
+                    name="Java",
+                    description="Java test",
+                    duration="30 min",
+                    job_levels=["Mid"],
+                    languages=["English"],
+                    remote=True,
+                    adaptive=False,
+                    test_type=["Knowledge"],
+                    link="http://java",
+                ),
+            ],
+            metadata=PromptMetadata(prompt_version="1.0", route=RouteType.RECOMMEND.value),
+        )
+        result = generator.generate(package)
+        assert LEGAL_DISCLAIMER not in result.reply
+
+    def test_state_extraction_prompt_has_legal_instructions(self) -> None:
+        """The state extraction prompt must instruct on legal compliance questions."""
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "state_extraction_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "LEGAL/COMPLIANCE QUESTION" in content or "legal_compliance_question" in content
+
+    def test_recommendation_prompt_has_legal_instruction(self) -> None:
+        """The recommendation prompt must include the legal disclaimer instruction."""
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "legal" in content.lower()
+        assert "explain what the assessment measures" in content.lower()
+
+    def test_comparison_prompt_has_legal_instruction(self) -> None:
+        """The comparison prompt must include the legal disclaimer instruction."""
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "comparison_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "legal" in content.lower()
+        assert "explain what the assessment measures" in content.lower()
+
+    def test_clarification_prompt_has_legal_instruction(self) -> None:
+        """The clarification prompt must include the legal disclaimer instruction."""
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "clarification_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "legal" in content.lower()
+        assert "explain what the assessment measures" in content.lower()

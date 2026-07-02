@@ -379,3 +379,35 @@ class ClarificationAnalyzer:
             field,
             "Could you provide more details about your requirements?",
         )
+
+
+# ---------------------------------------------------------------------------
+# LegalDisclaimerHandler
+# ---------------------------------------------------------------------------
+
+_LEGAL_PATTERNS: list[re.Pattern[str]] = [
+    re.compile(r"\b(eeoc|ada|adverse impact|disparate impact|title vii)\b", re.IGNORECASE),
+    re.compile(r"\b(legal|regulation|regulatory|compliance|compliant|comply|complies)\b", re.IGNORECASE),
+    re.compile(r"\b(regulations?\s+on|regulations?\s+for|required\s+by\s+law)\b", re.IGNORECASE),
+    re.compile(r"\b(is\s+it\s+legal|are\s+they\s+legal|legally\s+required)\b", re.IGNORECASE),
+    re.compile(r"\b(satisf(?:y|ies|ied)\s+(legal|regulatory|regulations?|compliance))\b", re.IGNORECASE),
+    re.compile(r"\b(govern(?:s|ing|ment|ance)\s+(regulation|compliance|mandate))\b", re.IGNORECASE),
+]
+
+LEGAL_DISCLAIMER: str = (
+    "I can explain what the assessment measures, but I can't determine "
+    "whether it satisfies legal or regulatory requirements."
+)
+
+class LegalDisclaimerHandler:
+    """Handles legal/compliance questions about SHL assessments."""
+
+    def is_legal_compliance_question(self, text: str) -> bool:
+        """Check if the user is asking about legal/regulatory compliance."""
+        return any(p.search(text) for p in _LEGAL_PATTERNS)
+
+    def format_disclaimer_response(self, original_reply: str = "") -> str:
+        """Return a response that includes the legal disclaimer."""
+        if original_reply and LEGAL_DISCLAIMER not in original_reply:
+            return f"{LEGAL_DISCLAIMER}\n\n{original_reply}"
+        return original_reply or LEGAL_DISCLAIMER
