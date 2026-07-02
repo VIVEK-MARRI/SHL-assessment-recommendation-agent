@@ -124,6 +124,11 @@ class PromptBuilder:
             user_prompt=user_prompt,
             route=route,
             grounding_assessments=grounding,
+            unmatched_names=(
+                comparison_context.unmatched_names
+                if template_route == RouteType.COMPARE and comparison_context is not None
+                else []
+            ),
             metadata=metadata
         )
 

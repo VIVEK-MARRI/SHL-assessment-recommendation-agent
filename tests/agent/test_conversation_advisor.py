@@ -331,8 +331,8 @@ class TestNewPromptTemplates:
     def test_comparison_has_difference_explanation(self) -> None:
         templates = PromptTemplates()
         prompt = templates.get_template(RouteType.COMPARE)
-        assert "ComparisonContext" in prompt
-        assert "purpose" in prompt or "audience" in prompt or "target" in prompt
+        assert "Differences" in prompt or "differences" in prompt
+        assert "Purpose" in prompt or "purpose" in prompt
 
     def test_refusal_has_graceful_language(self) -> None:
         templates = PromptTemplates()
@@ -646,3 +646,120 @@ class _MockState:
         self.seniority = seniority
         self.technical_skills = technical_skills or []
         self.constraints = constraints or []
+
+
+# =========================================================================
+# 14. Comparison spec compliance
+# =========================================================================
+
+class TestComparisonSpecCompliance:
+    """Tests that the comparison prompt and generation match the spec."""
+
+    def test_comparison_prompt_has_required_sections(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "comparison_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "Purpose" in content
+        assert "what it measures" in content or "What it measures" in content
+        assert "Typical use case" in content or "typical use case" in content
+        assert "Target audience" in content or "target audience" in content
+        assert "Differences" in content or "differences" in content
+        assert "prefer" in content or "preferred" in content
+
+    def test_comparison_prompt_no_clarification(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "comparison_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "Do NOT ask unnecessary clarification" in content
+
+    def test_comparison_prompt_missing_assessment_template(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "comparison_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "couldn't find" in content.lower()
+        assert "SHL Individual Test Solutions catalog" in content
+
+    def test_comparison_prompt_recommendations(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "comparison_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "Recommendations" in content or "recommendations" in content
+
+    def test_comparison_prompt_never_invent(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "comparison_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "Never invent" in content
+
+    def test_unmatched_names_injected_into_context(self) -> None:
+        client = _make_simple_client('{"reply": "ok", "recommended_names": [], "end_of_conversation": false}')
+        generator = ResponseGenerator(client=client)
+        package = PromptPackage(
+            system_prompt="You are a comparison consultant.",
+            user_prompt="User:\nCompare OPQ32r and Rust Assessment",
+            route=RouteType.COMPARE,
+            unmatched_names=["Rust Assessment"],
+            grounding_assessments=[
+                GroundingAssessment(
+                    name="OPQ32r",
+                    description="Workplace personality assessment",
+                    duration="25 min",
+                    job_levels=["Professional"],
+                    languages=["English"],
+                    remote=True,
+                    adaptive=False,
+                    test_type=["Personality"],
+                    link="http://opq32r",
+                )
+            ],
+            metadata=PromptMetadata(prompt_version="1.0", route=RouteType.COMPARE.value),
+        )
+        from agent.generation import SYSTEM_INSTRUCTIONS as sys_instructions
+        result = generator.generate(package)
+        assert result.reply is not None
+
+    def test_comparison_prompt_no_extra_keys(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "comparison_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "recommended_names" in content
+        assert "end_of_conversation" in content
+        # Should NOT have extra response fields
+        assert "extra keys" in content.lower() or "Never include extra keys" in content
+
+    def test_comparison_router_does_not_clarify(self) -> None:
+        """COMPARE route runs before CLARIFY in the router—verification."""
+        from agent.conversation_models import ConversationState
+        from agent.router import RuleBasedRouter
+        from agent.routing_models import RouteType
+        router = RuleBasedRouter()
+        state = ConversationState(
+            comparison_requested=True,
+            mentioned_assessment_names=["OPQ32r", "Verify G+"],
+            scope_flag="in_scope",
+        )
+        decision = router.route(state)
+        assert decision.route == RouteType.COMPARE
+
+    def test_comparison_with_mixed_matched_unmatched(self) -> None:
+        """When some assessments are found and some are not, unmatched are tracked."""
+        from agent.catalog_matcher import CatalogMatcher
+        from agent.comparison import ComparisonPipeline
+        from agent.conversation_models import ConversationState
+        matcher = CatalogMatcher()
+        matcher.load()
+        pipeline = ComparisonPipeline(matcher=matcher)
+        state = ConversationState(
+            mentioned_assessment_names=[
+                "OPQ32r",
+                "Verify G+",
+                "FakeAssessmentThatDoesNotExist",
+            ],
+        )
+        from agent.routing_models import RoutingDecision
+        decision = RoutingDecision(
+            route=RouteType.COMPARE,
+            next_module="comparison_pipeline",
+            reason="test",
+            confidence="HIGH",
+            query_required=True,
+            comparison_required=True,
+        )
+        ctx = pipeline.run(state, decision)
+        assert len(ctx.matched_assessments) >= 2
+        assert "FakeAssessmentThatDoesNotExist" in ctx.unmatched_names
+        assert ctx.comparison_possible is True

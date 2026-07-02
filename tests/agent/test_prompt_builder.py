@@ -124,8 +124,8 @@ def test_template_loading(templates: PromptTemplates) -> None:
     assert "GROUNDING CONTEXT" in rec
 
     comp = templates.get_template(RouteType.COMPARE)
-    assert "compare assessments" in comp
-    assert "ComparisonContext" in comp
+    assert "compare" in comp
+    assert "Purpose" in comp or "SHL Individual Test Solutions catalog" in comp
 
     clar = templates.get_template(RouteType.CLARIFY)
     assert "exactly ONE clarification question" in clar
@@ -245,8 +245,8 @@ def test_comparison_route(
     )
 
     assert package.route == RouteType.COMPARE
-    assert "ComparisonContext" in package.system_prompt
-    assert "compare assessments" in package.system_prompt
+    assert "Purpose" in package.system_prompt or "compare" in package.system_prompt
+    assert "SHL assessment consultant" in package.system_prompt
     assert len(package.grounding_assessments) == 2
     assert package.grounding_assessments[0].name == "Java Assessment 1"
 

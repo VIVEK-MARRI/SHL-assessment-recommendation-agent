@@ -116,6 +116,15 @@ class ResponseGenerator:
                 rel_parts.append("\nRELATIONSHIP NOTES:")
                 rel_parts.append(relationship_notes)
             
+            # Inject unmatched names for COMPARE route (assessments user asked about not in catalog)
+            if package.route == RouteType.COMPARE and package.unmatched_names:
+                unmatched_parts: list[str] = ["\nNOT IN CATALOG:"]
+                for name in package.unmatched_names:
+                    unmatched_parts.append(f"- {name}")
+                context_parts.append("")
+                context_parts.extend(unmatched_parts)
+                context_parts.append("")
+            
             # Build individual assessment entries
             assessment_entries: list[str] = []
             for a in package.grounding_assessments:
