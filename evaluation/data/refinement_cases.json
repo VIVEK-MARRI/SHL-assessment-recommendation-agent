@@ -1,0 +1,73 @@
+[
+  {
+    "id": "refine_001",
+    "state": {
+      "role": "Developer",
+      "technical_skills": [
+        "Python"
+      ]
+    },
+    "previous_state": {
+      "role": "Developer",
+      "technical_skills": [
+        "Java"
+      ]
+    },
+    "messages": [
+      {
+        "role": "user",
+        "content": "I need a Java Developer test."
+      },
+      {
+        "role": "assistant",
+        "content": "Here is Java (New)."
+      },
+      {
+        "role": "user",
+        "content": "Actually, change that to Python."
+      }
+    ],
+    "expected_route": "refine",
+    "expected_behavior_probe": "catalog_grounded_recommendation",
+    "expected_assessments": [
+      "Python (New)"
+    ],
+    "maximum_turns": 8
+  },
+  {
+    "id": "refine_002",
+    "state": {
+      "technical_skills": [
+        "Python"
+      ],
+      "constraints": [
+        "English"
+      ]
+    },
+    "previous_state": {
+      "technical_skills": [
+        "Python"
+      ]
+    },
+    "messages": [
+      {
+        "role": "user",
+        "content": "I need a Python test."
+      },
+      {
+        "role": "assistant",
+        "content": "Here is Python (New)."
+      },
+      {
+        "role": "user",
+        "content": "Can I only see English tests?"
+      }
+    ],
+    "expected_route": "refine",
+    "expected_behavior_probe": "catalog_grounded_recommendation",
+    "expected_assessments": [
+      "Python (New)"
+    ],
+    "maximum_turns": 8
+  }
+]

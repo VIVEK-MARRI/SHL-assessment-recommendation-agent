@@ -202,6 +202,7 @@ def build_document_records(
             document=documents[i],
             tokens=token_corpus[i],
             name=assessments[i].name,
+            description=assessments[i].description,
             url=assessments[i].link,
             test_type=_derive_test_type(assessments[i].keys),
             keys=list(assessments[i].keys),

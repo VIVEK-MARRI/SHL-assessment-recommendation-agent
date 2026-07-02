@@ -125,7 +125,7 @@ def create_app() -> FastAPI:
         },
     )
     async def chat_endpoint(request_body: ChatRequest, request: Request) -> ChatResponse:
-        from agent.generation_client import RateLimitError, ProviderError
+        from agent.generation_client import RateLimitError, GenerationError
         from agent.validator import InvalidGenerationResult
 
         container = request.app.state.container
@@ -136,6 +136,14 @@ def create_app() -> FastAPI:
                 content={"detail": "messages must not be empty."},
             )
 
+        if len(request_body.messages) > 8:
+            return ChatResponse(
+                reply="This conversation has reached the maximum allowed length. Please start a new session for further recommendations.",
+                recommendations=None
+            )
+
+        from agent.llm_client import LLMResponseError
+
         try:
             return container.chat_service.chat(request_body.messages)
 
@@ -145,11 +153,23 @@ def create_app() -> FastAPI:
                 status_code=status.HTTP_429_TOO_MANY_REQUESTS,
                 content={"detail": "LLM provider rate limit exceeded. Please retry shortly."},
             )
-        except ProviderError as exc:
+        except LLMResponseError as exc:
+            if "429" in str(exc):
+                logger.warning("Rate limit from provider during state extraction: %s", exc)
+                return JSONResponse(
+                    status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+                    content={"detail": "LLM provider rate limit exceeded. Please retry shortly."},
+                )
             logger.error("LLM provider error: %s", exc)
             return JSONResponse(
                 status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
                 content={"detail": "LLM provider is temporarily unavailable."},
+            )
+        except GenerationError as exc:
+            logger.error("LLM generation error: %s", exc)
+            return JSONResponse(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                content={"detail": "LLM generation failed."},
             )
         except InvalidGenerationResult as exc:
             logger.error("Validation failed: %s", exc)

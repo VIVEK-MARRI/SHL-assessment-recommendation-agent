@@ -1,10 +1,23 @@
 import logging
-from typing import Optional
+import re
 
 from agent.routing_models import RoutingDecision, RouteType
 from agent.conversation_models import ConversationState
 
 logger = logging.getLogger(__name__)
+
+# Deterministic off-topic keyword safety net
+_OFF_TOPIC_PATTERNS: list[re.Pattern[str]] = [
+    re.compile(r"\b(who won|fifa|world cup|sports|game|match)\b", re.IGNORECASE),
+    re.compile(r"\b(weather|temperature|forecast)\b", re.IGNORECASE),
+    re.compile(r"\b(recipe|ingredients|cook|bake)\b", re.IGNORECASE),
+    re.compile(r"\b(write code|program|debug|fix bug)\b", re.IGNORECASE),
+    re.compile(r"\b(movie|film|song|music)\b", re.IGNORECASE),
+    re.compile(r"\b(politics|president|election)\b", re.IGNORECASE),
+    re.compile(r"\b(ignore|disregard|override)\s+(instructions|prompt|system|rules)\b", re.IGNORECASE),
+    re.compile(r"\b(reveal|show|output|leak)\s+(your|the)\s+(prompt|instructions|system)\b", re.IGNORECASE),
+]
+
 
 class RoutingError(Exception):
     """Base exception for routing errors."""
@@ -17,11 +30,11 @@ class InvalidConversationState(RoutingError):
 class RuleBasedRouter:
     """Deterministically routes conversation state to the next action."""
 
-    def route(self, state: ConversationState, previous_state: Optional[ConversationState] = None) -> RoutingDecision:
+    def route(self, state: ConversationState) -> RoutingDecision:
         if not isinstance(state, ConversationState):
             raise InvalidConversationState("Input must be a valid ConversationState instance.")
             
-        logger.info(f"Routing state: scope_flag={state.scope_flag}, comparison={state.comparison_requested}, clarification={state.clarification_needed}")
+        logger.info(f"Routing state: scope_flag={state.scope_flag}, comparison={state.comparison_requested}, refinement={state.refinement_detected}")
 
         # Step 1: REFUSE
         if state.scope_flag != "in_scope":
@@ -35,6 +48,12 @@ class RuleBasedRouter:
                 recommendation_required=False
             )
             logger.info(f"Selected route: {decision.route}, Reason: {decision.reason}")
+            logger.debug(
+                "Routing decision=%s reason=%s state=%s",
+                decision.route,
+                decision.reason,
+                state.model_dump()
+            )
             return decision
 
         # Step 2: COMPARE
@@ -49,10 +68,16 @@ class RuleBasedRouter:
                 recommendation_required=False
             )
             logger.info(f"Selected route: {decision.route}, Reason: {decision.reason}")
+            logger.debug(
+                "Routing decision=%s reason=%s state=%s",
+                decision.route,
+                decision.reason,
+                state.model_dump()
+            )
             return decision
 
-        # Step 3: CLARIFY
-        if state.clarification_needed:
+        # Step 3: CLARIFY only when the state lacks a useful retrieval signal.
+        if state.clarification_needed and not self._is_sufficient_information(state):
             clarification_field = self._determine_clarification_field(state)
             decision = RoutingDecision(
                 route=RouteType.CLARIFY,
@@ -65,29 +90,36 @@ class RuleBasedRouter:
                 recommendation_required=False
             )
             logger.info(f"Selected route: {decision.route}, Reason: {decision.reason}")
+            logger.debug(
+                "Routing decision=%s reason=%s state=%s",
+                decision.route,
+                decision.reason,
+                state.model_dump()
+            )
             return decision
 
-        # Check for REFINE (updated requirements)
-        # Note: we check if requirements changed from previous state
-        is_updated = self._is_updated_requirements(state, previous_state)
-        
-        # Step 5 check (prioritized over 4 if updated)
-        if is_updated:
+        # Step 4: REFINE when the state extraction detected a change
+        if state.refinement_detected:
             decision = RoutingDecision(
                 route=RouteType.REFINE,
                 next_module="query_builder",
-                reason="Updated requirements detected.",
+                reason="Updated requirements detected via state extraction.",
                 confidence="HIGH",
                 query_required=True,
                 comparison_required=False,
                 recommendation_required=True
             )
             logger.info(f"Selected route: {decision.route}, Reason: {decision.reason}")
+            logger.debug(
+                "Routing decision=%s reason=%s state=%s",
+                decision.route,
+                decision.reason,
+                state.model_dump()
+            )
             return decision
 
-        # Step 4: RECOMMEND
-        is_sufficient = self._is_sufficient_information(state)
-        if is_sufficient:
+        # Step 5: RECOMMEND
+        if self._is_sufficient_information(state):
             decision = RoutingDecision(
                 route=RouteType.RECOMMEND,
                 next_module="query_builder",
@@ -98,9 +130,15 @@ class RuleBasedRouter:
                 recommendation_required=True
             )
             logger.info(f"Selected route: {decision.route}, Reason: {decision.reason}")
+            logger.debug(
+                "Routing decision=%s reason=%s state=%s",
+                decision.route,
+                decision.reason,
+                state.model_dump()
+            )
             return decision
             
-        # Fallback if it's neither sufficient nor updated
+        # Fallback: CLARIFY
         clarification_field = self._determine_clarification_field(state)
         decision = RoutingDecision(
             route=RouteType.CLARIFY,
@@ -113,65 +151,30 @@ class RuleBasedRouter:
             recommendation_required=False
         )
         logger.info(f"Selected fallback route: {decision.route}, Reason: {decision.reason}")
+        logger.debug(
+            "Routing decision=%s reason=%s state=%s",
+            decision.route,
+            decision.reason,
+            state.model_dump()
+        )
         return decision
 
+    @staticmethod
+    def contains_off_topic_pattern(text: str) -> bool:
+        """Check if text matches off-topic patterns as a deterministic safety net."""
+        return any(pattern.search(text) for pattern in _OFF_TOPIC_PATTERNS)
+
     def _determine_clarification_field(self, state: ConversationState) -> str:
-        """
-        Priority:
-        1. role
-        2. seniority
-        3. technical_skills
-        4. leadership_required
-        5. personality_required
-        6. cognitive_required
-        7. simulation_required
-        8. constraints
-        """
         if not state.role:
             return "role"
         if not state.seniority:
             return "seniority"
         if not state.technical_skills:
             return "technical_skills"
-        if not state.leadership_required:
-            return "leadership_required"
-        if not state.personality_required:
-            return "personality_required"
-        if not state.cognitive_required:
-            return "cognitive_required"
-        if not state.simulation_required:
-            return "simulation_required"
         if not state.constraints:
             return "constraints"
-            
-        return "role" # default fallback
+        return "role"
 
-    def _is_sufficient_information(self, state: ConversationState) -> bool:
-        """Recommend only when role exists AND technical_skills not empty. Seniority optional."""
-        return bool(state.role) and bool(state.technical_skills)
-        
-    def _is_updated_requirements(self, state: ConversationState, previous_state: Optional[ConversationState]) -> bool:
-        if not previous_state:
-            return False
-            
-        # Detect added constraints, removed skills, changed requirement, added simulations, removed personality, added leadership
-        if set(state.constraints) != set(previous_state.constraints):
-            return True
-        if set(state.technical_skills) != set(previous_state.technical_skills):
-            return True
-        if set(state.soft_skills) != set(previous_state.soft_skills):
-            return True
-        if state.role != previous_state.role:
-            return True
-        if state.seniority != previous_state.seniority:
-            return True
-        if state.simulation_required != previous_state.simulation_required:
-            return True
-        if state.personality_required != previous_state.personality_required:
-            return True
-        if state.leadership_required != previous_state.leadership_required:
-            return True
-        if state.cognitive_required != previous_state.cognitive_required:
-            return True
-            
-        return False
+    @staticmethod
+    def _is_sufficient_information(state: ConversationState) -> bool:
+        return bool(state.role) or bool(state.technical_skills)

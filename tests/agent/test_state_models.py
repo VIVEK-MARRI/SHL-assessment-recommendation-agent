@@ -49,5 +49,5 @@ def test_state_normalizes_lists_deterministically() -> None:
 
 def test_state_rejects_unknown_fields() -> None:
     with pytest.raises(ValidationError):
-        ConversationState.model_validate({"retrieved_assessments": []})
+        ConversationState.model_validate({"technical_skills_required": True})
 

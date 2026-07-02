@@ -47,7 +47,6 @@ class GenerationClient:
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_payload},
             ],
-            "response_format": {"type": "json_object"},
         }
         headers = {
             "Authorization": f"Bearer {self._config.api_key}",

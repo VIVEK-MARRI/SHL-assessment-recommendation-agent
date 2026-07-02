@@ -13,6 +13,7 @@ class RetrievedAssessment(BaseModel):
     name: str = Field(min_length=1)
     url: str = Field(min_length=1)
     test_type: str = ""
+    description: str = ""
     score: float
     rrf_score: float | None = Field(default=None, ge=0.0)
     embedding_score: float | None = None

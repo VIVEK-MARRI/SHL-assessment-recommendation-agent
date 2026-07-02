@@ -6,6 +6,10 @@ import re
 
 from pydantic import ValidationError
 
+from agent.conversation_advisor import (
+    CatalogRelationshipResolver,
+    ConfirmationDetector,
+)
 from agent.generation_client import (
     GenerationClient,
     GenerationError,
@@ -27,8 +31,14 @@ Do not explain your reasoning.
 Do not output chain-of-thought.
 Only recommend assessments provided in the grounding context.
 Never invent assessment names.
-Never output URLs.
-Never output metadata.
+Keep recommended_names in the same order as the grounding context.
+Your JSON output MUST exactly match this structure:
+{
+  "reply": "your conversational response",
+  "recommended_names": [],
+  "end_of_conversation": false
+}
+Never output extra keys.
 """
 
 def _clean_json_markdown(text: str) -> str:
@@ -45,11 +55,47 @@ def _clean_json_markdown(text: str) -> str:
         
     return text.strip()
 
+
+def _filter_grounded_names(names: object, grounded_names: list[str]) -> list[str]:
+    """Keep only context-grounded names and preserve retrieval order."""
+    if not isinstance(names, list):
+        return []
+
+    requested = {str(name).strip().casefold() for name in names if str(name).strip()}
+    if not requested:
+        return []
+
+    filtered: list[str] = []
+    seen: set[str] = set()
+    for grounded_name in grounded_names:
+        key = grounded_name.casefold()
+        if key in requested and key not in seen:
+            filtered.append(grounded_name)
+            seen.add(key)
+    return filtered
+
+
+def _extract_last_user_message(user_prompt: str) -> str:
+    """Extract the last user message from the formatted conversation."""
+    parts = re.split(r"\n(?:User|Assistant):\n", user_prompt)
+    # The last part is the most recent message
+    last = parts[-1].strip() if parts else ""
+    # If it ends with an assistant response, backtrack to user part
+    if last.startswith(("User:\n", "Assistant:\n")):
+        last = re.sub(r"^(User|Assistant):\n", "", last).strip()
+    return last
+
+
 class ResponseGenerator:
     """Executes the final LLM call using the PromptPackage and handles retries."""
 
-    def __init__(self, client: GenerationClient | None = None) -> None:
+    def __init__(
+        self,
+        client: GenerationClient | None = None,
+    ) -> None:
         self._client = client or GenerationClient()
+        self._relationship_resolver = CatalogRelationshipResolver()
+        self._confirmation_detector = ConfirmationDetector()
 
     def generate(self, package: PromptPackage) -> LLMGenerationResult:
         """Call the LLM and return a parsed LLMGenerationResult, with up to 1 retry."""
@@ -59,17 +105,38 @@ class ResponseGenerator:
         
         if package.route in (RouteType.RECOMMEND, RouteType.COMPARE, RouteType.REFINE):
             context_parts = ["\nGROUNDING CONTEXT:"]
+            
+            # Inject relationship notes first (before individual assessment listings)
+            rel_parts: list[str] = []
+            assessment_names = [a.name for a in package.grounding_assessments]
+            relationship_notes = self._relationship_resolver.format_relationship_context(
+                assessment_names
+            )
+            if relationship_notes:
+                rel_parts.append("\nRELATIONSHIP NOTES:")
+                rel_parts.append(relationship_notes)
+            
+            # Build individual assessment entries
+            assessment_entries: list[str] = []
             for a in package.grounding_assessments:
-                context_parts.append(f"Name: {a.name}")
-                context_parts.append(f"Description: {a.description}")
-                context_parts.append(f"Duration: {a.duration}")
-                context_parts.append(f"Job Levels: {', '.join(a.job_levels)}")
-                context_parts.append(f"Languages: {', '.join(a.languages)}")
-                context_parts.append(f"Remote: {a.remote}")
-                context_parts.append(f"Adaptive: {a.adaptive}")
-                context_parts.append(f"Test Type: {', '.join(a.test_type)}")
-                context_parts.append(f"Link: {a.link}")
-                context_parts.append("---")
+                parts: list[str] = []
+                parts.append(f"Name: {a.name}")
+                parts.append(f"Description: {a.description}")
+                parts.append(f"Duration: {a.duration}")
+                parts.append(f"Job Levels: {', '.join(a.job_levels)}")
+                parts.append(f"Languages: {', '.join(a.languages)}")
+                parts.append(f"Remote: {a.remote}")
+                parts.append(f"Adaptive: {a.adaptive}")
+                parts.append(f"Test Type: {', '.join(a.test_type)}")
+                parts.append(f"Link: {a.link}")
+                parts.append("---")
+                assessment_entries.append("\n".join(parts))
+            
+            if rel_parts:
+                context_parts.extend(rel_parts)
+                context_parts.append("")
+            
+            context_parts.extend(assessment_entries)
             
             if package.grounding_assessments:
                 system_prompt += "\n" + "\n".join(context_parts)
@@ -96,6 +163,8 @@ class ResponseGenerator:
                 # Try parsing JSON
                 try:
                     parsed = json.loads(content)
+                    if not isinstance(parsed, dict):
+                        raise JSONGenerationError("LLM returned a JSON list instead of a dict")
                 except json.JSONDecodeError as exc:
                     raise JSONGenerationError(f"LLM returned invalid JSON: {exc}") from exc
                 
@@ -103,9 +172,16 @@ class ResponseGenerator:
                 # Note: Validation for hallucinated names is NOT done here per instructions.
                 # Only structural validation via Pydantic.
                 try:
+                    recommended_names = parsed.get("recommended_names", [])
+                    if package.route in (RouteType.RECOMMEND, RouteType.COMPARE, RouteType.REFINE):
+                        recommended_names = _filter_grounded_names(
+                            recommended_names,
+                            [assessment.name for assessment in package.grounding_assessments],
+                        )
+
                     validated = LLMGenerationResult(
                         reply=parsed.get("reply", ""),
-                        recommended_names=parsed.get("recommended_names", []),
+                        recommended_names=recommended_names,
                         end_of_conversation=parsed.get("end_of_conversation", False),
                         provider=result["provider"],
                         model=result["model"],
@@ -116,6 +192,56 @@ class ResponseGenerator:
                         finish_reason=result["finish_reason"],
                     )
                     
+                    # Grounding override: if retrieval returned grounded assessments but LLM
+                    # incorrectly says "not enough information", force a grounded response.
+                    if (
+                        package.route in (RouteType.RECOMMEND, RouteType.REFINE, RouteType.COMPARE)
+                        and package.grounding_assessments
+                    ):
+                        not_enough = "not enough information" in validated.reply.lower()
+                        empty_recs = len(validated.recommended_names) == 0
+                        if not_enough or empty_recs:
+                            grounded_names = [a.name for a in package.grounding_assessments]
+                            logger.warning(
+                                "Grounding override triggered: LLM said '%s' with %d grounding candidates. "
+                                "Forcing grounded response.",
+                                validated.reply[:80] if not_enough else "no recommendations",
+                                len(grounded_names),
+                            )
+                            validated = LLMGenerationResult(
+                                reply="Based on the SHL catalog, here are the most relevant assessments for your requirements.",
+                                recommended_names=grounded_names,
+                                end_of_conversation=validated.end_of_conversation,
+                                provider=validated.provider,
+                                model=validated.model,
+                                latency_ms=validated.latency_ms,
+                                tokens_prompt=validated.tokens_prompt,
+                                tokens_completion=validated.tokens_completion,
+                                tokens_total=validated.tokens_total,
+                                finish_reason=validated.finish_reason,
+                            )
+
+                    # Post-processing: detect confirmation from last user message
+                    if package.route == RouteType.RECOMMEND:
+                        last_user_msg = _extract_last_user_message(package.user_prompt)
+                        if self._confirmation_detector.is_confirmation(last_user_msg):
+                            logger.info(
+                                "Confirmation detected in user message (%.60s), setting end_of_conversation",
+                                last_user_msg,
+                            )
+                            validated = LLMGenerationResult(
+                                reply=validated.reply,
+                                recommended_names=validated.recommended_names,
+                                end_of_conversation=True,
+                                provider=validated.provider,
+                                model=validated.model,
+                                latency_ms=validated.latency_ms,
+                                tokens_prompt=validated.tokens_prompt,
+                                tokens_completion=validated.tokens_completion,
+                                tokens_total=validated.tokens_total,
+                                finish_reason=validated.finish_reason,
+                            )
+
                     # Ensure no extra fields returned by LLM that violate schema
                     # Pydantic extra='forbid' checks if we passed **parsed, but we are pulling manually.
                     # Let's strictly check keys from parsed JSON.
@@ -144,4 +270,33 @@ class ResponseGenerator:
                 raise
                 
         # If we exhausted attempts
+        if package.route == RouteType.REFUSE:
+            logger.warning("Generation exhausted attempts for REFUSE route. Returning fallback.")
+            return LLMGenerationResult(
+                reply="I am sorry, but I can only assist with SHL Assessment Recommendations.",
+                recommended_names=[],
+                end_of_conversation=False,
+                provider=package.metadata.route,
+                model="fallback",
+                latency_ms=0.0,
+                tokens_prompt=0,
+                tokens_completion=0,
+                tokens_total=0,
+                finish_reason="fallback"
+            )
+        elif package.route == RouteType.CLARIFY:
+            logger.warning("Generation exhausted attempts for CLARIFY route. Returning fallback.")
+            return LLMGenerationResult(
+                reply="Could you please provide more details about the assessment you are looking for?",
+                recommended_names=[],
+                end_of_conversation=False,
+                provider=package.metadata.route,
+                model="fallback",
+                latency_ms=0.0,
+                tokens_prompt=0,
+                tokens_completion=0,
+                tokens_total=0,
+                finish_reason="fallback"
+            )
+
         raise last_error or GenerationError("Failed to generate response after retries.")

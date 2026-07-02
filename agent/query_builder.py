@@ -67,7 +67,11 @@ def _extract_duration_minutes(constraints: list[str]) -> int | None:
 _SENIORITY_TO_JOB_LEVELS: dict[str, list[str]] = {
     "intern": ["Entry Level"],
     "graduate": ["Graduate"],
-    "junior": ["Professional Individual Contributor"],
+    "new grad": ["Graduate"],
+    "fresher": ["Entry Level"],
+    "entry level": ["Entry Level"],
+    "entry": ["Entry Level"],
+    "junior": ["Entry Level"],
     "mid": ["Professional Individual Contributor"],
     "senior": ["Manager"],
     "lead": ["Manager"],
@@ -279,10 +283,15 @@ class QueryBuilder:
 
         # --- Query text & tokens ------------------------------------------
         # Build deterministic query_text: role + skills + soft skills +
-        # constraints (non-excluded) + expansion
+        # constraints (non-excluded) + job_levels + expansion
         text_parts: list[str] = []
         if state.role:
             text_parts.append(state.role)
+        # Add seniority/job level terms so BM25/FAISS can match them
+        if state.seniority:
+            text_parts.append(state.seniority)
+            for level in job_levels:
+                text_parts.append(level)
         text_parts.extend(normalised_skills)
         text_parts.extend(normalised_soft)
         # Add constraints that are not purely negative filters

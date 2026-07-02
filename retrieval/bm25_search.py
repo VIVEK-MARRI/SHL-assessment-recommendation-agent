@@ -117,6 +117,7 @@ def _to_retrieved_assessment(
         retrieval_source="bm25",
         entity_id=record.entity_id,
         name=record.name or parsed["name"] or record.entity_id,
+        description=record.description,
         url=record.url or f"https://www.shl.com/products/product-catalog/view/{record.entity_id}",
         test_type=record.test_type or parsed["test_type"],
         score=score,

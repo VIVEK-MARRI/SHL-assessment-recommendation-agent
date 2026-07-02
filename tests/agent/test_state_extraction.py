@@ -9,7 +9,7 @@ import pytest
 
 from agent.conversation_models import ConversationState
 from agent.llm_client import LLMConnectionError
-from agent.state_extraction import JSONParseError, StateExtractionError, StateExtractor
+from agent.state_extraction import JSONParseError, PROMPT_PATH, StateExtractionError, StateExtractor
 
 
 class FakeLLMClient:
@@ -18,10 +18,12 @@ class FakeLLMClient:
         self.fail = fail
         self.calls = 0
         self.user_payloads: list[str] = []
+        self.system_prompts: list[str] = []
 
     def complete_json(self, system_prompt: str, user_payload: str) -> str:
         self.calls += 1
         self.user_payloads.append(user_payload)
+        self.system_prompts.append(system_prompt)
         if self.fail:
             raise LLMConnectionError("offline")
         index = min(self.calls - 1, len(self.responses) - 1)
@@ -199,3 +201,79 @@ def test_latency_path_completes_deterministically(tmp_path: Path) -> None:
 
     assert first.model_dump() == second.model_dump()
 
+
+def test_prompt_template_contains_only_valid_fields() -> None:
+    content = PROMPT_PATH.read_text(encoding="utf-8")
+    assert '"technical_skills_required":' not in content
+    assert "role" in content
+    assert "seniority" in content
+
+
+def test_overwrite_safety_net_no_overwrite(tmp_path: Path) -> None:
+    llm = FakeLLMClient([_state(technical_skills=["Java", "Spring"])])
+    extractor = StateExtractor(llm_client=llm, prompt_path=_prompt(tmp_path))
+    state = extractor.extract([
+        {"role": "user", "content": "I need a Java developer."},
+        {"role": "assistant", "content": "OK."},
+        {"role": "user", "content": "Add Spring experience too."},
+    ])
+    assert state.technical_skills == ["Java", "Spring"]
+
+
+def test_overwrite_safety_net_removes_stale_skill(tmp_path: Path) -> None:
+    llm = FakeLLMClient([_state(technical_skills=["Java", "Python"])])
+    extractor = StateExtractor(llm_client=llm, prompt_path=_prompt(tmp_path))
+    state = state = extractor.extract([
+        {"role": "user", "content": "I need Java expertise."},
+        {"role": "assistant", "content": "Sure."},
+        {"role": "user", "content": "Actually, switch to Python instead."},
+    ])
+    assert "Java" not in state.technical_skills
+    assert "Python" in state.technical_skills
+
+
+def test_overwrite_safety_net_single_message(tmp_path: Path) -> None:
+    llm = FakeLLMClient([_state(technical_skills=["Python"])])
+    extractor = StateExtractor(llm_client=llm, prompt_path=_prompt(tmp_path))
+    state = extractor.extract([
+        {"role": "user", "content": "I need Python."},
+    ])
+    assert state.technical_skills == ["Python"]
+
+
+def test_overwrite_safety_net_not_triggered_without_keyword(tmp_path: Path) -> None:
+    llm = FakeLLMClient([_state(technical_skills=["Java"])])
+    extractor = StateExtractor(llm_client=llm, prompt_path=_prompt(tmp_path))
+    state = extractor.extract([
+        {"role": "user", "content": "I need Java."},
+        {"role": "assistant", "content": "OK."},
+        {"role": "user", "content": "Also test my Python skills."},
+    ])
+    assert state.technical_skills == ["Java"]
+
+
+def test_overwrite_safety_net_changes_role(tmp_path: Path) -> None:
+    llm = FakeLLMClient([_state(role="Engineer", technical_skills=["Python"])])
+    extractor = StateExtractor(llm_client=llm, prompt_path=_prompt(tmp_path))
+    state = extractor.extract([
+        {"role": "user", "content": "Hire an Engineer with Python."},
+        {"role": "assistant", "content": "OK."},
+        {"role": "user", "content": "Actually, change that to a Data Scientist."},
+    ])
+    assert state.role is None or state.role == ""
+    assert "Python" in state.technical_skills or not state.technical_skills
+
+
+def test_retry_prompt_lists_only_valid_fields(tmp_path: Path) -> None:
+    llm = FakeLLMClient(['{"technical_skills_required": true}', _state()])
+    extractor = StateExtractor(llm_client=llm, prompt_path=_prompt(tmp_path))
+    
+    state = extractor.extract([{"role": "user", "content": "I need a Python test."}])
+    
+    assert llm.calls == 2
+    retry_prompt = llm.system_prompts[1]
+    
+    assert "The previous JSON did not match the required schema" in retry_prompt
+    assert '"technical_skills_required":' not in retry_prompt
+    assert "role" in retry_prompt
+    assert "Do not include any additional keys" in retry_prompt

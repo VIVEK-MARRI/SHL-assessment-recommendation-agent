@@ -22,6 +22,7 @@ class BM25DocumentRecord(BaseModel):
     document: str = Field(min_length=1, description="Raw document text before tokenization.")
     tokens: list[str] = Field(description="Tokenized form used to build BM25.")
     name: str | None = None
+    description: str = Field(default="", description="Description of the assessment.")
     url: str | None = None
     test_type: str = ""
     keys: list[str] = Field(default_factory=list)

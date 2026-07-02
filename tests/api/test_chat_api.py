@@ -133,6 +133,21 @@ def test_chat_validation_failure(validation_error_client) -> None:
     assert response.status_code == 500
 
 
+def test_chat_turn_cap_8_messages_allowed(success_client) -> None:
+    msgs = [{"role": "user", "content": f"msg {i}"} for i in range(8)]
+    response = success_client.post("/chat", json={"messages": msgs})
+    assert response.status_code == 200
+
+
+def test_chat_turn_cap_9_messages_blocked(success_client) -> None:
+    msgs = [{"role": "user", "content": f"msg {i}"} for i in range(9)]
+    response = success_client.post("/chat", json={"messages": msgs})
+    assert response.status_code == 200
+    data = response.json()
+    assert "maximum allowed length" in data["reply"].lower()
+    assert data["recommendations"] is None
+
+
 def test_chat_internal_error(internal_error_client) -> None:
     response = internal_error_client.post(
         "/chat",

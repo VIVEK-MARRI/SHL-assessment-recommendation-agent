@@ -245,14 +245,14 @@ def test_no_duration_constraint(builder: QueryBuilder) -> None:
 # ---------------------------------------------------------------------------
 
 
-def test_seniority_junior_maps_to_professional(builder: QueryBuilder) -> None:
+def test_seniority_junior_maps_to_entry_level(builder: QueryBuilder) -> None:
     state = ConversationState(
         role="Developer",
         technical_skills=["Java"],
         seniority="Junior",
     )
     query = builder.build(state, _recommend_decision())
-    assert "Professional Individual Contributor" in query.filters.job_levels
+    assert "Entry Level" in query.filters.job_levels
 
 
 def test_seniority_senior_maps_to_manager(builder: QueryBuilder) -> None:

@@ -96,12 +96,13 @@ def normalize_record(record: dict[str, object]) -> dict[str, object]:
     """
     normalized = dict(record)
 
-    normalized["keys"] = [normalize_category(value) for value in list(record.get("keys", []))]
+    from typing import cast, Any
+    normalized["keys"] = [normalize_category(value) for value in cast(Any, record.get("keys", []))]
     normalized["languages"] = [
-        normalize_language(value) for value in list(record.get("languages", []))
+        normalize_language(value) for value in cast(Any, record.get("languages", []))
     ]
     normalized["job_levels"] = [
-        normalize_job_level(value) for value in list(record.get("job_levels", []))
+        normalize_job_level(value) for value in cast(Any, record.get("job_levels", []))
     ]
     normalized["status"] = normalize_status(str(record.get("status", "")))
     normalized["link"] = normalize_url(str(record.get("link", "")))

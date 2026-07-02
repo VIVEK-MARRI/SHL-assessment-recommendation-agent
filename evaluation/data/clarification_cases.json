@@ -1,0 +1,26 @@
+[
+  {
+    "id": "clarify_001",
+    "messages": [
+      {
+        "role": "user",
+        "content": "I want an assessment."
+      }
+    ],
+    "expected_route": "clarify",
+    "expected_behavior_probe": "clarification",
+    "maximum_turns": 8
+  },
+  {
+    "id": "clarify_002",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Do you have any tests for candidates?"
+      }
+    ],
+    "expected_route": "clarify",
+    "expected_behavior_probe": "clarification",
+    "maximum_turns": 8
+  }
+]

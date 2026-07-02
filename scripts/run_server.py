@@ -10,12 +10,20 @@ from __future__ import annotations
 import argparse
 import os
 import sys
+import logging
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
 
 def main() -> None:
+    logging.basicConfig(level=logging.DEBUG, format='%(levelname)s:\t%(name)s - %(message)s')
     parser = argparse.ArgumentParser(
         description="Run the SHL Recommendation Agent API server.",
     )
@@ -38,8 +46,8 @@ def main() -> None:
     )
     parser.add_argument(
         "--log-level",
-        default=os.getenv("LOG_LEVEL", "info").lower(),
-        help="Uvicorn log level (default: info)",
+        default=os.getenv("LOG_LEVEL", "debug").lower(),
+        help="Uvicorn log level (default: debug)",
     )
     args = parser.parse_args()
 

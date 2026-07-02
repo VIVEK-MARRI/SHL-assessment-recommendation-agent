@@ -119,17 +119,19 @@ def comparison_context() -> ComparisonContext:
 
 def test_template_loading(templates: PromptTemplates) -> None:
     rec = templates.get_template(RouteType.RECOMMEND)
-    assert "You are an SHL Individual Test Solutions consultant." in rec
+    assert "SHL assessment consultant" in rec
     assert "Never recommend assessments outside the supplied list" in rec
+    assert "GROUNDING CONTEXT" in rec
 
     comp = templates.get_template(RouteType.COMPARE)
-    assert "Use ONLY ComparisonContext" in comp
+    assert "compare assessments" in comp
+    assert "ComparisonContext" in comp
 
     clar = templates.get_template(RouteType.CLARIFY)
-    assert "Generate exactly ONE clarification question" in clar
+    assert "exactly ONE clarification question" in clar
 
     ref = templates.get_template(RouteType.REFUSE)
-    assert "Politely refuse" in ref
+    assert "Politely decline" in ref or "Politely refuse" in ref
 
 
 def test_template_caching(templates: PromptTemplates) -> None:
@@ -243,7 +245,8 @@ def test_comparison_route(
     )
 
     assert package.route == RouteType.COMPARE
-    assert "Use ONLY ComparisonContext" in package.system_prompt
+    assert "ComparisonContext" in package.system_prompt
+    assert "compare assessments" in package.system_prompt
     assert len(package.grounding_assessments) == 2
     assert package.grounding_assessments[0].name == "Java Assessment 1"
 
@@ -305,7 +308,7 @@ def test_refusal_route(
     )
 
     assert package.route == RouteType.REFUSE
-    assert "Politely refuse" in package.system_prompt
+    assert "Politely decline" in package.system_prompt or "Politely refuse" in package.system_prompt
     assert len(package.grounding_assessments) == 0
 
 

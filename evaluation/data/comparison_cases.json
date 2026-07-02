@@ -1,0 +1,26 @@
+[
+  {
+    "id": "comp_001",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Compare Python (New) and Java (New)"
+      }
+    ],
+    "expected_route": "compare",
+    "expected_behavior_probe": "comparison",
+    "maximum_turns": 8
+  },
+  {
+    "id": "comp_002",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Which is better: OPQ Leadership Report or Verify - G+"
+      }
+    ],
+    "expected_route": "compare",
+    "expected_behavior_probe": "comparison",
+    "maximum_turns": 8
+  }
+]

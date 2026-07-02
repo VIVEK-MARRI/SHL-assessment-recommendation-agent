@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import unicodedata
+from typing import Any, cast
 from urllib.parse import urlparse, urlunparse
 
 from catalog.constants import (
@@ -145,19 +146,31 @@ def clean_record(record: dict[str, object]) -> dict[str, object]:
     cleaned: dict[str, object] = {}
 
     for field in ("entity_id", "name", "description", "status", "duration", "duration_raw"):
-        raw = record.get(field, "")
-        cleaned[field] = clean_text(str(raw))
+        raw = record.get(field)
+        cleaned[field] = clean_text(str(raw)) if raw is not None else ""
 
-    cleaned["job_levels_raw"] = clean_text(str(record.get("job_levels_raw", "")))
-    cleaned["languages_raw"] = clean_text(str(record.get("languages_raw", "")))
+    raw_jl = record.get("job_levels_raw")
+    cleaned["job_levels_raw"] = clean_text(str(raw_jl)) if raw_jl is not None else ""
 
-    cleaned["link"] = clean_url(str(record.get("link", "")))
+    raw_lang = record.get("languages_raw")
+    cleaned["languages_raw"] = clean_text(str(raw_lang)) if raw_lang is not None else ""
 
-    cleaned["keys"] = clean_list(record.get("keys", []))
-    cleaned["job_levels"] = clean_list(record.get("job_levels", []))
-    cleaned["languages"] = clean_list(record.get("languages", []))
+    raw_link = record.get("link")
+    cleaned["link"] = clean_url(str(raw_link)) if raw_link is not None else ""
 
-    cleaned["remote"] = clean_boolean(record.get("remote", False))
-    cleaned["adaptive"] = clean_boolean(record.get("adaptive", False))
+    keys = record.get("keys")
+    cleaned["keys"] = clean_list(cast(Any, keys) if keys is not None else [])
+
+    jls = record.get("job_levels")
+    cleaned["job_levels"] = clean_list(cast(Any, jls) if jls is not None else [])
+
+    langs = record.get("languages")
+    cleaned["languages"] = clean_list(cast(Any, langs) if langs is not None else [])
+
+    remote = record.get("remote")
+    cleaned["remote"] = clean_boolean(cast(Any, remote) if remote is not None else False)
+
+    adaptive = record.get("adaptive")
+    cleaned["adaptive"] = clean_boolean(cast(Any, adaptive) if adaptive is not None else False)
 
     return cleaned

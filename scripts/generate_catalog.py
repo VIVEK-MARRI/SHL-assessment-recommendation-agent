@@ -21,8 +21,8 @@ _PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(_PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(_PROJECT_ROOT))
 
-from config import get_logger  # noqa: E402
 from catalog import build_canonical_catalog  # noqa: E402
+from config import get_logger  # noqa: E402
 
 logger = get_logger(__name__)
 
@@ -42,7 +42,8 @@ def main() -> None:
     args = parser.parse_args()
 
     try:
-        kwargs: dict[str, object] = {}
+        from typing import Any
+        kwargs: dict[str, Any] = {}
         if args.output is not None:
             kwargs["output_path"] = args.output
 
@@ -53,7 +54,8 @@ def main() -> None:
         )
         sys.exit(0)
     except Exception as exc:
-        logger.error("Catalog generation failed: %s", exc)
+        print(f"Catalog generation failed: {exc}")
+        logger.error("Catalog generation failed: %s", exc, exc_info=True)
         sys.exit(1)
 
 

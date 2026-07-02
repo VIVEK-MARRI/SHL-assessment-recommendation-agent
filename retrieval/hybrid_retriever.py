@@ -5,11 +5,14 @@ from __future__ import annotations
 import logging
 from time import perf_counter
 
+from agent.conversation_models import ConversationState
+from agent.query_models import QueryFilters
 from retrieval.bm25_retriever import BM25Retriever, BM25RetrieverError
 from retrieval.confidence_gate import ConfidenceGate, ConfidenceGateError
 from retrieval.embedding_retriever import EmbeddingRetriever, EmbeddingRetrieverError
 from retrieval.reciprocal_rank_fusion import RRFError, reciprocal_rank_fusion
 from retrieval.retrieval_models import HybridRetrievalResult, HybridRetrieverHealth
+from retrieval.metadata_reranker import MetadataReranker
 
 logger = logging.getLogger(__name__)
 
@@ -52,6 +55,8 @@ class HybridRetriever:
     def search(
         self,
         query: str,
+        state: ConversationState | None = None,
+        filters: QueryFilters | None = None,
         top_k: int = 20,
         minimum_score: float = 0.0,
     ) -> HybridRetrievalResult:
@@ -60,6 +65,8 @@ class HybridRetriever:
             raise HybridRetrieverError("top_k must be greater than or equal to 1")
         self._ensure_initialized()
         started_at = perf_counter()
+        state = state or ConversationState()
+        filters = filters or QueryFilters()
 
         try:
             embedding_results = self._embedding_retriever.search(
@@ -84,9 +91,12 @@ class HybridRetriever:
             fused_results = reciprocal_rank_fusion(
                 embedding_results,
                 bm25_results,
-                top_k=top_k,
+                top_k=top_k * 2,  # get more for reranking
             )
-            logger.info("Deduplication completed: results=%d", len(fused_results))
+            
+            fused_results = MetadataReranker.rerank(fused_results, state, filters)[:top_k]
+            
+            logger.info("Deduplication and reranking completed: results=%d", len(fused_results))
             result = self._confidence_gate.evaluate(
                 fused_results,
                 embedding_results,

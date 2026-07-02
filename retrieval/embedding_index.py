@@ -161,6 +161,7 @@ def build_metadata(assessments: list, offset_start: int = 0) -> list[AssessmentM
                 offset=offset,
                 entity_id=assessment.entity_id,
                 name=assessment.name,
+                description=assessment.description,
                 url=assessment.link,
                 test_type=_derive_test_type(assessment.keys),
                 keys=list(assessment.keys),

@@ -97,6 +97,7 @@ def search_embeddings(
             RetrievedAssessment(
                 entity_id=record.entity_id,
                 name=record.name,
+                description=record.description,
                 url=record.url,
                 test_type=record.test_type,
                 score=score,

@@ -1,0 +1,134 @@
+{
+  "retrieval": {
+    "recall@1": 0.0,
+    "recall@3": 0.0,
+    "recall@5": 0.0,
+    "recall@10": 0.0,
+    "mrr": 0.0,
+    "ndcg@10": 0.0,
+    "precision@3": 0.0,
+    "precision@5": 0.0,
+    "latency_ms": {
+      "avg": 0.00024009495973587036,
+      "median": 0.00010011717677116394,
+      "p95": 0.000500120222568512,
+      "p99": 0.000500120222568512,
+      "min": 0.00010011717677116394,
+      "max": 0.000500120222568512
+    },
+    "num_queries": 5
+  },
+  "routing": {
+    "accuracy": 0.25,
+    "macro_f1": 0.08,
+    "per_class": {
+      "RECOMMEND": {
+        "precision": 0.25,
+        "recall": 1.0,
+        "f1": 0.4
+      },
+      "REFINE": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "COMPARE": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "CLARIFY": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "REFUSE": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      }
+    },
+    "confusion_matrix": {
+      "RECOMMEND": {
+        "RECOMMEND": 2,
+        "REFINE": 0,
+        "COMPARE": 0,
+        "CLARIFY": 0,
+        "REFUSE": 0
+      },
+      "REFINE": {
+        "RECOMMEND": 1,
+        "REFINE": 0,
+        "COMPARE": 0,
+        "CLARIFY": 0,
+        "REFUSE": 0
+      },
+      "COMPARE": {
+        "RECOMMEND": 2,
+        "REFINE": 0,
+        "COMPARE": 0,
+        "CLARIFY": 0,
+        "REFUSE": 0
+      },
+      "CLARIFY": {
+        "RECOMMEND": 1,
+        "REFINE": 0,
+        "COMPARE": 0,
+        "CLARIFY": 0,
+        "REFUSE": 0
+      },
+      "REFUSE": {
+        "RECOMMEND": 2,
+        "REFINE": 0,
+        "COMPARE": 0,
+        "CLARIFY": 0,
+        "REFUSE": 0
+      }
+    },
+    "num_examples": 8
+  },
+  "state_extraction": {
+    "field_accuracy": {
+      "intent": 0.6667,
+      "scope_flag": 0.6667,
+      "job_levels": 0.3333,
+      "languages": 0.6667,
+      "mentioned_assessment_names": 0.6667,
+      "is_comparison_request": 0.6667,
+      "end_of_conversation": 1.0
+    },
+    "overall_accuracy": 0.6667,
+    "json_valid_rate": 1.0,
+    "latency_ms": {
+      "avg": 0.0010333800067504246,
+      "median": 0.0010998919606208801,
+      "p95": 0.001500127837061882,
+      "p99": 0.001500127837061882,
+      "min": 0.000500120222568512,
+      "max": 0.001500127837061882
+    },
+    "num_examples": 3
+  },
+  "recommendation": {
+    "exact_match": 0.0,
+    "top_3_accuracy": 0.0,
+    "top_5_accuracy": 0.0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "avg_recommendation_count": 0.0,
+    "num_examples": 3
+  },
+  "benchmark": {
+    "num_runs": 5,
+    "stages": {
+      "end_to_end": {
+        "avg": 10.281179985031486,
+        "median": 10.201600147411227,
+        "p95": 10.53999993018806,
+        "p99": 10.53999993018806,
+        "min": 10.079599916934967,
+        "max": 10.53999993018806
+      }
+    }
+  }
+}

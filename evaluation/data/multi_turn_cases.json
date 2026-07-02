@@ -1,0 +1,50 @@
+[
+  {
+    "id": "mt_001",
+    "messages": [
+      {
+        "role": "user",
+        "content": "I am looking for an assessment."
+      },
+      {
+        "role": "assistant",
+        "content": "What role?"
+      },
+      {
+        "role": "user",
+        "content": "Software engineer."
+      }
+    ],
+    "expected_route": "recommend",
+    "expected_behavior_probe": "catalog_grounded_recommendation",
+    "maximum_turns": 8
+  },
+  {
+    "id": "mt_002",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Hi"
+      },
+      {
+        "role": "assistant",
+        "content": "Hello! How can I help?"
+      },
+      {
+        "role": "user",
+        "content": "I need a test for python."
+      },
+      {
+        "role": "assistant",
+        "content": "Sure, anything else?"
+      },
+      {
+        "role": "user",
+        "content": "Make it senior level."
+      }
+    ],
+    "expected_route": "recommend",
+    "expected_behavior_probe": "catalog_grounded_recommendation",
+    "maximum_turns": 8
+  }
+]

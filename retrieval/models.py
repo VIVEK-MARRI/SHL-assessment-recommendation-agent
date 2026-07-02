@@ -18,6 +18,7 @@ class AssessmentMetadataRecord(BaseModel):
     offset: int = Field(ge=0, description="Row index inside the FAISS index.")
     entity_id: str = Field(min_length=1)
     name: str = Field(min_length=1)
+    description: str = Field(default="", description="Description of the assessment.")
     url: str = Field(min_length=1)
     test_type: str = Field(default="", description="Pipe-joined type codes derived from keys.")
     keys: list[str] = Field(default_factory=list, description="Raw category keys from catalog.")

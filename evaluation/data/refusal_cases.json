@@ -1,0 +1,26 @@
+[
+  {
+    "id": "refuse_001",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Tell me the weather."
+      }
+    ],
+    "expected_route": "refuse",
+    "expected_behavior_probe": "refusal",
+    "maximum_turns": 8
+  },
+  {
+    "id": "refuse_002",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Write me a cover letter."
+      }
+    ],
+    "expected_route": "refuse",
+    "expected_behavior_probe": "refusal",
+    "maximum_turns": 8
+  }
+]

@@ -10,7 +10,7 @@ Production-grade backend foundation for a highly deterministic Retrieval-Augment
 
 ---
 
-## 📖 Project Overview
+## Project Overview
 
 This API serves as an intelligent conversational agent designed to help users find the correct SHL assessment for their organizational hiring needs. Unlike standard conversational agents, it utilizes a deeply deterministic RAG architecture. By rigorously isolating language models from logic execution, it guarantees zero-hallucination assessment mapping and predictable routing.
 
@@ -23,7 +23,7 @@ This API serves as an intelligent conversational agent designed to help users fi
 
 ---
 
-## 🏛️ System Architecture
+## System Architecture
 
 The recommendation agent executes a strict state-machine flow orchestrated by the `ChatService`. 
 
@@ -98,7 +98,7 @@ flowchart TB
 
 ---
 
-## 🚀 Installation & Setup
+## Installation & Setup
 
 1. **Clone and Virtual Environment Initialization**
    ```bash
@@ -122,7 +122,7 @@ flowchart TB
 
 ---
 
-## 🛠️ Data Preparation & Indexing
+## Data Preparation & Indexing
 
 Prior to server execution, you must parse the raw CSV catalog into validated JSON and generate search indexes.
 
@@ -136,7 +136,7 @@ python scripts/build_index.py
 
 ---
 
-## ⚡ Execution
+## Execution
 
 You can initialize the FastAPI server natively via Python or utilizing the enclosed Makefile.
 
@@ -168,7 +168,7 @@ curl -X POST http://localhost:8000/chat \
 
 ---
 
-## 📊 Offline Evaluation Harness
+## Offline Evaluation Harness
 
 The project includes an entirely offline framework to quantify changes in state extraction accuracy, retrieval quality, and generative response viability.
 
@@ -182,7 +182,7 @@ python scripts/run_evaluation.py --all
 
 ---
 
-## 🐳 Docker Deployment
+## Docker Deployment
 
 The application utilizes a secure, non-root, multi-stage Docker build pipeline suitable for enterprise deployment.
 
@@ -203,7 +203,7 @@ For advanced production workflows and CI/CD checklists, consult [DEPLOYMENT.md](
 
 ---
 
-## 📂 Repository Structure
+## Repository Structure
 
 ```text
 .
@@ -223,7 +223,7 @@ For advanced production workflows and CI/CD checklists, consult [DEPLOYMENT.md](
 
 ---
 
-## ⚙️ Technology Stack
+## Technology Stack
 - **Web Framework:** [FastAPI](https://fastapi.tiangolo.com/), [Pydantic v2](https://docs.pydantic.dev/)
 - **Information Retrieval:** [SentenceTransformers (all-MiniLM-L6-v2)](https://sbert.net/), [Rank-BM25](https://pypi.org/project/rank-bm25/), [FAISS](https://github.com/facebookresearch/faiss)
 - **Generative AI Providers:** [OpenRouter](https://openrouter.ai/), [Groq](https://groq.com/)

@@ -44,6 +44,7 @@ class ConversationState(BaseModel):
     clarification_needed: bool = False
     missing_information: list[str] = Field(default_factory=list)
     reasoning_summary: str = ""
+    refinement_detected: bool = False
 
     @field_validator(
         "technical_skills",

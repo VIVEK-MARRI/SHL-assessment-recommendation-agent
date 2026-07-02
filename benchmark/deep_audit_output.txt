@@ -1,0 +1,900 @@
+================================================================================
+DEEP AUDIT ANALYSIS -- SHL Assessment Recommendation Agent
+================================================================================
+
+Loaded catalog: 377 assessments
+Loaded full coverage audit: 2262 queries
+Loaded stress audit: 1119 queries
+Loaded stress benchmark: 1119 query entries
+
+================================================================================
+ANALYSIS 1: NEVER-RETRIEVED ASSESSMENTS (from stress audit)
+================================================================================
+
+Total catalog: 377
+Seen in stress audit: 361
+Never retrieved: 16
+
+--- Details for each never-retrieved assessment ---
+
+
+  [3778] Adobe Photoshop CC
+  Keys: Knowledge & Skills
+  Job Levels: Mid Level, Professional Individual Contributor
+  Languages: English (US)
+  Duration: 20 minutes
+  Description: The Adobe Photoshop CC test measures knowledge of Adobe Photoshop CC. Designed for experienced users, this test covers the following topics: 3D, Color, File Management, Interface, Layers, Painting and
+  Top queries it WOULD be relevant for:
+    - "Looking for Change management DEVELOPER" (cat: management, form: mixed_caps)
+    - "looking for a api expert" (cat: backend, form: jargon)
+    - "need ui developer for backend team" (cat: backend, form: missing_punctuation)
+    - "Need a Full stack for our TEAM" (cat: development_360, form: mixed_caps)
+    - "looking for performance testing" (cat: testing, form: short)
+  Niche indicators: ['single knowledge/skills key (generic)']
+  Assessment appears niche
+
+  [4115] Apache Pig (New)
+  Keys: Knowledge & Skills
+  Job Levels: Mid Level, Professional Individual Contributor
+  Languages: English (US)
+  Duration: 6 minutes
+  Description: Multi-choice test that measures the knowledge of Pig architecture, built-in operators, built-in functions and commands in PigLatin.
+  Top queries it WOULD be relevant for:
+    - "machine learning opening" (cat: data_science, form: short)
+    - "needs jenkins" (cat: devops, form: partial_requirement)
+    - "need coding ninja" (cat: simulations, form: jargon)
+    - "need help finding backend tests" (cat: backend, form: conversational)
+    - "need help finding cloud computing tests" (cat: cloud, form: conversational)
+  Niche indicators: ['single knowledge/skills key (generic)']
+  Assessment appears niche
+
+  [4161] Biochemistry (New)
+  Keys: Knowledge & Skills
+  Job Levels: Graduate, Mid Level, Professional Individual Contributor
+  Languages: English (US)
+  Duration: 8 minutes
+  Description: Multi-choice test that measures the knowledge of various bio-molecules like amino acids, proteins, enzymes, carbohydrates, vitamins and nucleic acids, and concepts of bioenergetics and metabolism.
+  Top queries it WOULD be relevant for:
+    - "need a candidate who knows python like the back of their hand" (cat: python, form: idiomatic)
+  Niche indicators: ['single knowledge/skills key (generic)']
+  Assessment appears niche
+
+  [4044] Ceramic Engineering (New)
+  Keys: Knowledge & Skills
+  Job Levels: Graduate, Mid Level, Professional Individual Contributor
+  Languages: English (US)
+  Duration: 12 minutes
+  Description: Multi-choice test that measures the knowledge of classification of ceramic materials, production of ceramics and thermodynamics.
+  Top queries it WOULD be relevant for:
+    - "software engineer" (cat: knowledge_skills, form: short)
+    - "hiring a 10x engineer" (cat: development_360, form: jargon)
+    - "ml engineer" (cat: development_360, form: short)
+    - "test engineer" (cat: development_360, form: short)
+    - "urgent software engineer" (cat: knowledge_skills, form: short)
+  Niche indicators: ['single knowledge/skills key (generic)']
+  Assessment appears niche
+
+  [4162] Dermatology (New)
+  Keys: Knowledge & Skills
+  Job Levels: Graduate, Mid Level, Professional Individual Contributor
+  Languages: English (US)
+  Duration: 3 minutes
+  Description: Multi-choice test that measures the knowledge of various diseases related to skin, their symptoms, the drugs used to treat them, and different terminologies used in the field of dermatology.
+  Top queries it WOULD be relevant for:
+    - "we need to screen artificial intelligence candidates" (cat: assessment_exercises, form: conversational)
+    - "need to test analytical skills of our candidates" (cat: development_360, form: conversational)
+  Niche indicators: ['single knowledge/skills key (generic)', 'short duration (3 min)']
+  Assessment appears niche
+
+  [4048] General Diseases (New)
+  Keys: Knowledge & Skills
+  Job Levels: Graduate, Mid Level, Professional Individual Contributor
+  Languages: English (US)
+  Duration: 5 minutes
+  Description: Multi-choice test that measures the knowledge of common diseases of ear, nose, throat and teeth, their symptoms, drugs used to treat them and various drugs used to relieve pain.
+  No stress benchmark queries list this as relevant.
+  Niche indicators: ['single knowledge/skills key (generic)', 'short duration (5 min)']
+  Assessment appears niche
+
+  [3994] MS Word (New)
+  Keys: Knowledge & Skills
+  Job Levels: Professional Individual Contributor, Supervisor, Mid Level, Entry Level, Graduate, Manager
+  Languages: Spanish, French, Portuguese (Brazil), English (US)
+  Duration: 4 minutes
+  Description: Multi-choice test that measures the ability to use MS Word to record and save textual information.
+  No stress benchmark queries list this as relevant.
+  Niche indicators: ['single knowledge/skills key (generic)', 'short duration (4 min)']
+  Assessment appears niche
+
+  [4058] Medical Terminology (New)
+  Keys: Knowledge & Skills
+  Job Levels: Graduate, Mid Level, Professional Individual Contributor
+  Languages: English (US)
+  Duration: 3 minutes
+  Description: Multi-choice test that measures the knowledge of different medical terms and abbreviations related to the human body, diseases and diagnosis.
+  No stress benchmark queries list this as relevant.
+  Niche indicators: ['single knowledge/skills key (generic)', 'short duration (3 min)']
+  Assessment appears niche
+
+  [4096] Molecular Biology (New)
+  Keys: Knowledge & Skills
+  Job Levels: Graduate, Mid Level, Professional Individual Contributor
+  Languages: English (US)
+  Duration: 6 minutes
+  Description: Multi-choice test that measures the knowledge of molecular genetics, transgenics, rDNA technology, chromosomal genetics, transformation and related processes.
+  Top queries it WOULD be relevant for:
+    - "tech lead" (cat: personality_behavior, form: short)
+    - "hiring a tech wizard" (cat: knowledge_skills, form: jargon)
+  Niche indicators: ['single knowledge/skills key (generic)']
+  Assessment appears niche
+
+  [4154] Organic Chemistry (New)
+  Keys: Knowledge & Skills
+  Job Levels: Graduate, Mid Level, Professional Individual Contributor
+  Languages: English (US)
+  Duration: 10 minutes
+  Description: Multi-choice test that measures the knowledge of the basic concepts in organic chemistry.
+  No stress benchmark queries list this as relevant.
+  Niche indicators: ['single knowledge/skills key (generic)']
+  Assessment appears niche
+
+  [4107] Paint Technology (New)
+  Keys: Knowledge & Skills
+  Job Levels: Professional Individual Contributor, Graduate, Mid Level
+  Languages: English (US)
+  Duration: 7 minutes
+  Description: Multi-choice test that measures the knowledge of paint raw materials and precursors, manufacture of different types of coatings, surface treatment and coating applications.
+  Top queries it WOULD be relevant for:
+    - "tech lead" (cat: personality_behavior, form: short)
+    - "hiring a tech wizard" (cat: knowledge_skills, form: jargon)
+  Niche indicators: ['single knowledge/skills key (generic)']
+  Assessment appears niche
+
+  [3998] Pediatrics (New)
+  Keys: Knowledge & Skills
+  Job Levels: Graduate, Mid Level, Professional Individual Contributor
+  Languages: English (US)
+  Duration: 5 minutes
+  Description: Multi-choice test that measures the basic knowledge of pediatric diseases, their symptoms and the medicines administered to cure or prevent them.
+  No stress benchmark queries list this as relevant.
+  Niche indicators: ['single knowledge/skills key (generic)', 'short duration (5 min)']
+  Assessment appears niche
+
+  [4114] Pharmaceutical Chemistry (New)
+  Keys: Knowledge & Skills
+  Job Levels: Graduate, Mid Level, Professional Individual Contributor
+  Languages: English (US)
+  Duration: 17 minutes
+  Description: Multi-choice test that measures the knowledge of physical chemistry, organic chemistry, inorganic chemistry, biochemistry and medicinal chemistry.
+  No stress benchmark queries list this as relevant.
+  Niche indicators: ['single knowledge/skills key (generic)']
+  Assessment appears niche
+
+  [4111] Pharmaceutics (New)
+  Keys: Knowledge & Skills
+  Job Levels: Graduate, Mid Level, Professional Individual Contributor
+  Languages: English (US)
+  Duration: 12 minutes
+  Description: Multi-choice test that measures the knowledge of pharmaceutical engineering and technology for drug manufacture, biopharmaceutics, modern pharmaceutics and dispensing pharmacy.
+  Top queries it WOULD be relevant for:
+    - "need a tech wizard for our team" (cat: development_360, form: jargon)
+    - "looking for a tech wizard" (cat: personality_behavior, form: jargon)
+    - "hiring a tech wizard" (cat: knowledge_skills, form: jargon)
+  Niche indicators: ['single knowledge/skills key (generic)']
+  Assessment appears niche
+
+  [4095] Prism (New)
+  Keys: Knowledge & Skills
+  Job Levels: Mid Level, Professional Individual Contributor
+  Languages: English (US)
+  Duration: 4 minutes
+  Description: Multi-choice test that measures the knowledge of modules, patterns and other basic concepts of using the Prism library.
+  No stress benchmark queries list this as relevant.
+  Niche indicators: ['single knowledge/skills key (generic)', 'short duration (4 min)']
+  Assessment appears niche
+
+  [17] Written English v1
+  Keys: Knowledge & Skills
+  Job Levels: Entry Level, Front Line Manager, Mid Level, Professional Individual Contributor
+  Languages: English (US), English International
+  Duration: 30 minutes
+  Description: The Written English test measures knowledge of US English grammar and English reading comprehension. It is designed for those with English as a second language and covers the following topics: Article
+  Top queries it WOULD be relevant for:
+    - "looking for entry level tests for campus hiring" (cat: entry_level, form: conversational)
+  Niche indicators: ['single knowledge/skills key (generic)']
+  Assessment appears niche
+
+Report saved to C:\vivek\SHL-assessment-recommendation-agent\benchmark\reports\failure_analysis.md
+
+================================================================================
+ANALYSIS 2: FALSE POSITIVE PATTERNS -- Over-Retrieved Irrelevant Assessments
+================================================================================
+
+Top-20 Most Frequently Retrieved Irrelevant Assessments (False Positives)
+
+Rank  ID       Name                                          FP Count   Total Ret  FP Rate    Keys
+----------------------------------------------------------------------------------------------------------------------------------
+1     3976     Verify Interactive G+ Candidate Report        290        290        100.0     % Ability & Aptitude
+2     4130     Salesforce Development (New)                  268        281        95.4      % Knowledge & Skills
+3     4019     Adobe Experience Manager (New)                250        274        91.2      % Knowledge & Skills
+4     382      Following Instructions v1 - UK (R1)           203        225        90.2      % Knowledge & Skills
+5     4062     Drupal (New)                                  202        213        94.8      % Knowledge & Skills
+6     4080     HTML/CSS (New)                                187        188        99.5      % Knowledge & Skills
+7     4040     ITIL (IT Infrastructure Library) (New)        184        193        95.3      % Knowledge & Skills
+8     4171     Search Engine Optimization (New)              180        182        98.9      % Knowledge & Skills
+9     4116     Operations Management (New)                   176        223        78.9      % Knowledge & Skills
+10    3941     Verify - Following Instructions               174        174        100.0     % Ability & Aptitude
+11    383      Following Instructions v1 - US (R2)           169        188        89.9      % Knowledge & Skills
+12    3827     .NET Framework 4.5                            166        179        92.7      % Knowledge & Skills
+13    4072     Front Office Management (New)                 162        162        100.0     % Knowledge & Skills
+14    4101     Desktop Support (New)                         156        179        87.2      % Knowledge & Skills
+15    4094     .NET MVC (New)                                155        169        91.7      % Knowledge & Skills
+16    333      Interviewing and Hiring Concepts (U.S.)       154        162        95.1      % Knowledge & Skills
+17    116      Software Business Analysis                    154        218        70.6      % Knowledge & Skills
+18    4092     Microsoft Dynamics Development (New)          154        165        93.3      % Knowledge & Skills
+19    3974     Verify Interactive G+ Report                  148        148        100.0     % Ability & Aptitude
+20    4099     .NET MVVM (New)                               145        151        96.0      % Knowledge & Skills
+
+--- Cross-category analysis of top false positives ---
+
+  [3976] Verify Interactive G+ Candidate Report
+  Appears as false positive in categories: {'personality_behavior': 16, 'testing': 8, 'data_science': 11, 'ability_aptitude': 3, 'devops': 30, 'finance': 1, 'biodata_situational_judgment': 7, 'management': 5, 'hr': 2, 'cybersecurity': 28, 'general': 6, 'frontend': 26, 'backend': 27, 'entry_level': 1, 'cloud': 14, 'sql': 4, 'java': 4, 'development_360': 26, 'python': 11, 'knowledge_skills': 48, 'simulations': 4, 'mobile': 6, 'assessment_exercises': 2}
+
+  [4130] Salesforce Development (New)
+  Appears as false positive in categories: {'personality_behavior': 13, 'testing': 6, 'data_science': 15, 'ability_aptitude': 9, 'devops': 41, 'finance': 1, 'biodata_situational_judgment': 5, 'management': 13, 'hr': 1, 'cybersecurity': 4, 'general': 4, 'frontend': 26, 'backend': 24, 'cloud': 16, 'cognitive': 1, 'java': 3, 'development_360': 16, 'python': 7, 'knowledge_skills': 38, 'simulations': 1, 'mobile': 8, 'sales': 14, 'assessment_exercises': 1, 'marketing': 1}
+
+  [4019] Adobe Experience Manager (New)
+  Appears as false positive in categories: {'personality_behavior': 12, 'testing': 18, 'data_science': 12, 'ability_aptitude': 2, 'devops': 12, 'finance': 1, 'biodata_situational_judgment': 1, 'management': 51, 'hr': 6, 'cybersecurity': 6, 'general': 12, 'frontend': 8, 'backend': 5, 'cloud': 28, 'cognitive': 7, 'sql': 2, 'java': 6, 'development_360': 11, 'python': 2, 'knowledge_skills': 25, 'customer_service': 1, 'simulations': 3, 'mobile': 5, 'sales': 3, 'marketing': 11}
+
+  [382] Following Instructions v1 - UK (R1)
+  Appears as false positive in categories: {'personality_behavior': 6, 'testing': 7, 'data_science': 16, 'ability_aptitude': 7, 'devops': 10, 'finance': 1, 'biodata_situational_judgment': 9, 'management': 5, 'hr': 3, 'cybersecurity': 8, 'general': 20, 'frontend': 11, 'backend': 16, 'cloud': 6, 'cognitive': 1, 'sql': 3, 'java': 7, 'development_360': 23, 'python': 16, 'knowledge_skills': 16, 'simulations': 7, 'mobile': 1, 'assessment_exercises': 2, 'marketing': 2}
+
+  [4062] Drupal (New)
+  Appears as false positive in categories: {'personality_behavior': 10, 'testing': 9, 'data_science': 11, 'ability_aptitude': 1, 'devops': 1, 'biodata_situational_judgment': 4, 'management': 2, 'hr': 1, 'cybersecurity': 9, 'general': 3, 'frontend': 44, 'backend': 36, 'sql': 17, 'java': 2, 'development_360': 5, 'python': 23, 'knowledge_skills': 21, 'simulations': 1, 'mobile': 1, 'marketing': 1}
+
+  [4080] HTML/CSS (New)
+  Appears as false positive in categories: {'personality_behavior': 10, 'testing': 5, 'data_science': 3, 'ability_aptitude': 1, 'management': 2, 'cybersecurity': 4, 'general': 8, 'frontend': 55, 'backend': 29, 'cloud': 2, 'cognitive': 1, 'java': 13, 'development_360': 4, 'python': 6, 'knowledge_skills': 31, 'customer_service': 5, 'simulations': 4, 'mobile': 2, 'marketing': 1, 'personality': 1}
+
+  [4040] ITIL (IT Infrastructure Library) (New)
+  Appears as false positive in categories: {'personality_behavior': 16, 'testing': 15, 'data_science': 2, 'ability_aptitude': 2, 'devops': 36, 'biodata_situational_judgment': 4, 'management': 19, 'hr': 4, 'cybersecurity': 13, 'general': 4, 'backend': 1, 'cloud': 32, 'development_360': 14, 'python': 2, 'knowledge_skills': 10, 'customer_service': 4, 'simulations': 5, 'assessment_exercises': 1}
+
+  [4171] Search Engine Optimization (New)
+  Appears as false positive in categories: {'personality_behavior': 9, 'testing': 6, 'data_science': 19, 'ability_aptitude': 4, 'devops': 10, 'finance': 1, 'biodata_situational_judgment': 4, 'management': 13, 'hr': 3, 'cybersecurity': 6, 'general': 13, 'frontend': 8, 'backend': 12, 'cloud': 6, 'cognitive': 1, 'sql': 2, 'java': 5, 'development_360': 8, 'python': 5, 'knowledge_skills': 27, 'simulations': 7, 'mobile': 2, 'sales': 1, 'assessment_exercises': 1, 'marketing': 7}
+
+  [4116] Operations Management (New)
+  Appears as false positive in categories: {'personality_behavior': 9, 'testing': 9, 'data_science': 2, 'ability_aptitude': 10, 'devops': 21, 'biodata_situational_judgment': 6, 'management': 62, 'hr': 4, 'cybersecurity': 1, 'general': 3, 'frontend': 3, 'backend': 2, 'cloud': 6, 'cognitive': 3, 'java': 1, 'development_360': 5, 'python': 2, 'knowledge_skills': 10, 'simulations': 4, 'sales': 1, 'assessment_exercises': 1, 'marketing': 11}
+
+  [3941] Verify - Following Instructions
+  Appears as false positive in categories: {'personality_behavior': 12, 'testing': 4, 'data_science': 7, 'ability_aptitude': 7, 'devops': 11, 'finance': 1, 'biodata_situational_judgment': 10, 'management': 2, 'hr': 2, 'cybersecurity': 5, 'general': 14, 'frontend': 12, 'backend': 13, 'cloud': 6, 'cognitive': 1, 'sql': 3, 'java': 6, 'development_360': 21, 'python': 8, 'knowledge_skills': 15, 'customer_service': 1, 'simulations': 6, 'mobile': 2, 'assessment_exercises': 2, 'marketing': 3}
+
+  [383] Following Instructions v1 - US (R2)
+  Appears as false positive in categories: {'personality_behavior': 12, 'testing': 9, 'data_science': 7, 'ability_aptitude': 2, 'devops': 11, 'finance': 1, 'biodata_situational_judgment': 8, 'management': 5, 'hr': 2, 'cybersecurity': 7, 'general': 15, 'frontend': 9, 'backend': 11, 'cloud': 5, 'cognitive': 1, 'sql': 3, 'java': 3, 'development_360': 23, 'python': 8, 'knowledge_skills': 17, 'simulations': 8, 'mobile': 1, 'marketing': 1}
+
+  [3827] .NET Framework 4.5
+  Appears as false positive in categories: {'personality_behavior': 14, 'testing': 3, 'data_science': 4, 'devops': 13, 'hr': 2, 'general': 27, 'frontend': 11, 'backend': 19, 'cloud': 11, 'sql': 6, 'java': 7, 'development_360': 3, 'python': 8, 'knowledge_skills': 32, 'customer_service': 2, 'mobile': 4}
+
+  [4072] Front Office Management (New)
+  Appears as false positive in categories: {'personality_behavior': 8, 'testing': 6, 'data_science': 2, 'ability_aptitude': 8, 'devops': 8, 'finance': 1, 'biodata_situational_judgment': 6, 'management': 42, 'hr': 8, 'cybersecurity': 2, 'general': 6, 'frontend': 12, 'backend': 7, 'entry_level': 1, 'cloud': 9, 'cognitive': 8, 'development_360': 5, 'python': 2, 'knowledge_skills': 5, 'customer_service': 3, 'simulations': 1, 'sales': 1, 'assessment_exercises': 2, 'marketing': 9}
+
+  [4101] Desktop Support (New)
+  Appears as false positive in categories: {'personality_behavior': 16, 'testing': 11, 'data_science': 2, 'ability_aptitude': 5, 'devops': 14, 'biodata_situational_judgment': 4, 'management': 3, 'cybersecurity': 14, 'general': 2, 'frontend': 9, 'backend': 14, 'cloud': 5, 'cognitive': 4, 'development_360': 14, 'knowledge_skills': 22, 'customer_service': 6, 'simulations': 5, 'mobile': 4, 'assessment_exercises': 1, 'marketing': 1}
+
+  [4094] .NET MVC (New)
+  Appears as false positive in categories: {'personality_behavior': 13, 'testing': 2, 'data_science': 5, 'devops': 12, 'hr': 2, 'cybersecurity': 3, 'general': 27, 'frontend': 9, 'backend': 15, 'cloud': 9, 'sql': 5, 'java': 6, 'development_360': 3, 'python': 8, 'knowledge_skills': 31, 'mobile': 4, 'sales': 1}
+
+  [333] Interviewing and Hiring Concepts (U.S.)
+  Appears as false positive in categories: {'personality_behavior': 8, 'testing': 5, 'data_science': 10, 'ability_aptitude': 5, 'devops': 11, 'biodata_situational_judgment': 6, 'management': 24, 'hr': 8, 'cybersecurity': 5, 'general': 13, 'frontend': 6, 'backend': 5, 'entry_level': 1, 'cloud': 6, 'cognitive': 1, 'sql': 3, 'java': 3, 'development_360': 7, 'python': 4, 'knowledge_skills': 11, 'customer_service': 1, 'simulations': 3, 'mobile': 2, 'sales': 1, 'assessment_exercises': 2, 'marketing': 3}
+
+  [116] Software Business Analysis
+  Appears as false positive in categories: {'personality_behavior': 22, 'testing': 5, 'data_science': 6, 'ability_aptitude': 15, 'devops': 8, 'finance': 1, 'biodata_situational_judgment': 8, 'management': 23, 'hr': 1, 'cybersecurity': 10, 'general': 5, 'backend': 2, 'cloud': 8, 'cognitive': 1, 'sql': 1, 'java': 2, 'development_360': 9, 'python': 2, 'knowledge_skills': 19, 'customer_service': 1, 'simulations': 1, 'sales': 2, 'assessment_exercises': 2}
+
+  [4092] Microsoft Dynamics Development (New)
+  Appears as false positive in categories: {'personality_behavior': 6, 'testing': 7, 'data_science': 2, 'ability_aptitude': 2, 'devops': 21, 'biodata_situational_judgment': 5, 'management': 17, 'hr': 3, 'cybersecurity': 2, 'general': 5, 'frontend': 5, 'backend': 7, 'cloud': 29, 'cognitive': 3, 'java': 1, 'development_360': 7, 'python': 3, 'knowledge_skills': 19, 'simulations': 3, 'mobile': 2, 'sales': 3, 'marketing': 2}
+
+  [3974] Verify Interactive G+ Report
+  Appears as false positive in categories: {'personality_behavior': 13, 'data_science': 8, 'ability_aptitude': 1, 'devops': 17, 'biodata_situational_judgment': 5, 'management': 1, 'cybersecurity': 17, 'frontend': 11, 'backend': 10, 'cloud': 6, 'java': 3, 'development_360': 18, 'python': 1, 'knowledge_skills': 32, 'simulations': 2, 'mobile': 3}
+
+  [4099] .NET MVVM (New)
+  Appears as false positive in categories: {'personality_behavior': 13, 'testing': 2, 'data_science': 4, 'devops': 11, 'hr': 2, 'general': 27, 'frontend': 7, 'backend': 14, 'cloud': 13, 'sql': 2, 'java': 4, 'development_360': 3, 'python': 8, 'knowledge_skills': 30, 'mobile': 4, 'sales': 1}
+
+Report saved to C:\vivek\SHL-assessment-recommendation-agent\benchmark\reports\false_positives.md
+
+================================================================================
+ANALYSIS 3: PER-CATEGORY PERFORMANCE (Both Benchmarks)
+================================================================================
+
+------------------------------------------------------------
+  FULL CATALOG COVERAGE
+------------------------------------------------------------
+
+Category                       Count    P@1      P@3      P@5      P@10     R@10     MRR      nDCG@10 
+----------------------------------------------------------------------------------------------------
+situational_judgment           60       0.6000   0.3056   0.2000   0.1000   1.0000   0.7589   0.7589  
+competencies                   30       0.6333   0.3333   0.2000   0.1000   1.0000   0.7833   0.7833  
+personality                    360      0.6361   0.3046   0.1950   0.0986   0.9861   0.7800   0.7800  
+simulation                     210      0.6714   0.3159   0.1981   0.0995   0.9952   0.8101   0.8098  
+development                    30       0.7000   0.3111   0.2000   0.1000   1.0000   0.8167   0.8167  
+cognitive                      192      0.7135   0.3038   0.1927   0.1000   1.0000   0.8204   0.8204  
+testing                        36       0.7778   0.3333   0.2000   0.1000   1.0000   0.8889   0.8889  
+exercises                      6        0.8333   0.3333   0.2000   0.1000   1.0000   0.9167   0.9167  
+sql                            66       0.8485   0.3333   0.2000   0.1000   1.0000   0.9217   0.9217  
+java                           54       0.8704   0.3333   0.2000   0.1000   1.0000   0.9352   0.9352  
+general                        696      0.9655   0.3333   0.2000   0.1000   1.0000   0.9825   0.9825  
+software_engineering           234      0.9829   0.3333   0.2000   0.1000   1.0000   0.9915   0.9915  
+backend                        30       1.0000   0.3333   0.2000   0.1000   1.0000   1.0000   1.0000  
+cloud                          12       1.0000   0.3333   0.2000   0.1000   1.0000   1.0000   1.0000  
+cybersecurity                  12       1.0000   0.3333   0.2000   0.1000   1.0000   1.0000   1.0000  
+dotnet                         60       1.0000   0.3333   0.2000   0.1000   1.0000   1.0000   1.0000  
+engineering                    42       1.0000   0.3333   0.2000   0.1000   1.0000   1.0000   1.0000  
+finance                        18       1.0000   0.3333   0.2000   0.1000   1.0000   1.0000   1.0000  
+frontend                       48       1.0000   0.3333   0.2000   0.1000   1.0000   1.0000   1.0000  
+hr                             18       1.0000   0.3333   0.2000   0.1000   1.0000   1.0000   1.0000  
+leadership                     6        1.0000   0.3333   0.2000   0.1000   1.0000   1.0000   1.0000  
+marketing                      18       1.0000   0.3333   0.2000   0.1000   1.0000   1.0000   1.0000  
+mobile                         12       1.0000   0.3333   0.2000   0.1000   1.0000   1.0000   1.0000  
+python                         6        1.0000   0.3333   0.2000   0.1000   1.0000   1.0000   1.0000  
+sales                          6        1.0000   0.3333   0.2000   0.1000   1.0000   1.0000   1.0000  
+
+--- Worst performing categories (count>=3, lowest P@1) ---
+
+  Category: situational_judgment (count=60, P@1=0.6000)
+    Query: "Executive Scenarios"
+      First rel rank: 2
+      Top-5: 3849/Executive Scenarios Narrative Report, 743/Executive Scenarios, 3899/Executive Scenarios Profile Report, 741/Graduate Scenarios, 3902/Managerial Scenarios Narrative Report
+    Query: "I need to hire Executive Scenarios"
+      First rel rank: 2
+      Top-5: 3849/Executive Scenarios Narrative Report, 743/Executive Scenarios, 3899/Executive Scenarios Profile Report, 3903/Managerial Scenarios Candidate Report, 741/Graduate Scenarios
+    Query: "Looking for Executive Scenarios assessment"
+      First rel rank: 2
+      Top-5: 3849/Executive Scenarios Narrative Report, 743/Executive Scenarios, 3899/Executive Scenarios Profile Report, 742/Management Scenarios, 3903/Managerial Scenarios Candidate Report
+
+  Category: competencies (count=30, P@1=0.6333)
+    Query: "Global Skills Assessment"
+      First rel rank: 1
+      Top-5: 4301/Global Skills Assessment, 4302/Global Skills Development Report, 4311/AI Skills, 4219/Assessment and Development Center Exercises, 399/Visual Comparison - UK
+    Query: "I need to hire Global Skills"
+      First rel rank: 2
+      Top-5: 4302/Global Skills Development Report, 4301/Global Skills Assessment, 4218/Smart Interview Live Coding, 382/Following Instructions v1 - UK (R1), 3745/Verify - Numerical Ability
+    Query: "Looking for Global Skills assessment"
+      First rel rank: 2
+      Top-5: 4302/Global Skills Development Report, 4301/Global Skills Assessment, 4311/AI Skills, 4219/Assessment and Development Center Exercises, 4215/Virtual Assessment and Development Centers
+
+  Category: personality (count=360, P@1=0.6361)
+    Query: "360° Multi-Rater Feedback System"
+      First rel rank: 1
+      Top-5: 744/360° Multi-Rater Feedback System (MFS), 4297/360 Digital Report, 3996/Statistical Analysis System (New), 399/Visual Comparison - UK, 395/Reviewing Forms - US (R1)
+    Query: "I need to hire 360° Multi-Rater Feedback System"
+      First rel rank: 1
+      Top-5: 744/360° Multi-Rater Feedback System (MFS), 4297/360 Digital Report, 3996/Statistical Analysis System (New), 3949/MFS 360 UCF Performance Potential Dev Tips Report, 4019/Adobe Experience Manager (New)
+    Query: "Looking for 360° Multi-Rater Feedback assessment"
+      First rel rank: 1
+      Top-5: 744/360° Multi-Rater Feedback System (MFS), 4297/360 Digital Report, 3948/MFS 360 UCF Standard Report, 3950/MFS 360 UCF Group Report, 3904/Managerial Scenarios Profile Report
+
+  Category: simulation (count=210, P@1=0.6714)
+    Query: "Accounts Payable Simulation"
+      First rel rank: 1
+      Top-5: 4187/Accounts Payable Simulation (New), 4188/Accounts Receivable Simulation (New), 4178/Accounts Payable (New), 4179/Accounts Receivable (New), 4189/Contact Center Call Simulation (New)
+    Query: "I need to hire Accounts Payable"
+      First rel rank: 2
+      Top-5: 4178/Accounts Payable (New), 4187/Accounts Payable Simulation (New), 4179/Accounts Receivable (New), 4188/Accounts Receivable Simulation (New), 4084/Java 8 (New)
+    Query: "Looking for Accounts Payable assessment"
+      First rel rank: 2
+      Top-5: 4178/Accounts Payable (New), 4187/Accounts Payable Simulation (New), 4179/Accounts Receivable (New), 4188/Accounts Receivable Simulation (New), 4219/Assessment and Development Center Exercises
+
+  Category: development (count=30, P@1=0.7000)
+    Query: "360 Digital Report"
+      First rel rank: 1
+      Top-5: 4297/360 Digital Report, 3950/MFS 360 UCF Group Report, 3951/MFS 360 Enterprise Leadership Report, 3948/MFS 360 UCF Standard Report, 4239/Digital Readiness Development Report - Manager
+    Query: "I need to hire 360 Digital"
+      First rel rank: 1
+      Top-5: 4297/360 Digital Report, 744/360° Multi-Rater Feedback System (MFS), 4003/Digital Advertising (New), 3949/MFS 360 UCF Performance Potential Dev Tips Report, 4207/Microsoft 365 (New)
+    Query: "Looking for 360 Digital assessment"
+      First rel rank: 1
+      Top-5: 4297/360 Digital Report, 744/360° Multi-Rater Feedback System (MFS), 4003/Digital Advertising (New), 4219/Assessment and Development Center Exercises, 4125/Geoinformatics Engineering (New)
+
+------------------------------------------------------------
+  UNSEEN STRESS TEST
+------------------------------------------------------------
+
+Category                       Count    P@1      P@3      P@5      P@10     R@10     MRR      nDCG@10 
+----------------------------------------------------------------------------------------------------
+entry_level                    1        0.0000   0.0000   0.0000   0.3000   0.1500   0.1667   0.1337  
+general                        44       0.0000   0.0000   0.0000   0.0068   0.9807   0.0038   0.0030  
+personality                    1        0.0000   0.0000   0.2000   0.3000   0.1500   0.2500   0.1622  
+cognitive                      16       0.1250   0.2917   0.3625   0.3937   0.1969   0.4583   0.3234  
+assessment_exercises           5        0.2000   0.2667   0.2000   0.2200   0.1100   0.4400   0.2135  
+biodata_situational_judgment   29       0.2414   0.3218   0.3172   0.2759   0.1379   0.4971   0.2881  
+development_360                67       0.2537   0.2338   0.2269   0.2179   0.1231   0.4410   0.2424  
+personality_behavior           70       0.2857   0.3333   0.3286   0.2943   0.2407   0.4965   0.3296  
+ability_aptitude               33       0.3030   0.3333   0.3697   0.3515   0.1758   0.5217   0.3371  
+testing                        39       0.3077   0.3162   0.2923   0.2590   0.2064   0.4978   0.2889  
+management                     87       0.3908   0.3410   0.3471   0.3184   0.1596   0.5801   0.3427  
+hr                             17       0.4118   0.3333   0.3529   0.3588   0.3127   0.5980   0.4179  
+java                           44       0.4318   0.5152   0.4955   0.4841   0.2633   0.6007   0.4813  
+python                         37       0.4865   0.4054   0.3784   0.3162   0.1581   0.6369   0.3729  
+devops                         80       0.4875   0.4208   0.3650   0.3013   0.1525   0.6647   0.3766  
+cybersecurity                  41       0.4878   0.4146   0.4049   0.3390   0.1695   0.6396   0.4005  
+frontend                       67       0.5075   0.3930   0.3373   0.2776   0.1922   0.6467   0.3947  
+cloud                          69       0.5217   0.3623   0.3014   0.2638   0.2186   0.6492   0.3781  
+backend                        64       0.5312   0.3542   0.3469   0.2953   0.1559   0.6639   0.3685  
+simulations                    16       0.6250   0.5208   0.4250   0.2875   0.1437   0.6541   0.4262  
+sql                            33       0.6364   0.5960   0.5939   0.5000   0.2841   0.7213   0.5632  
+knowledge_skills               120      0.6417   0.5194   0.4500   0.3558   0.2442   0.7526   0.4841  
+marketing                      14       0.6429   0.3571   0.3429   0.2500   0.1250   0.7172   0.3658  
+mobile                         14       0.6429   0.4286   0.4000   0.3786   0.1909   0.7649   0.4484  
+data_science                   77       0.6753   0.6234   0.4857   0.3597   0.1799   0.7762   0.4965  
+finance                        4        0.7500   0.5000   0.5000   0.3250   0.1625   0.8750   0.4838  
+sales                          20       0.7500   0.7000   0.6500   0.5950   0.2975   0.8462   0.6543  
+customer_service               10       0.9000   0.5000   0.4000   0.3300   0.1836   0.9125   0.4959  
+
+--- Worst performing categories (count>=3, lowest P@1) ---
+
+  Category: general (count=44, P@1=0.0000)
+    Query: "PE role need test"
+      First rel rank: None
+      Top-5: 383/Following Instructions v1 - US (R2), 382/Following Instructions v1 - UK (R1), 3941/Verify - Following Instructions, 3484/PJM Selection Report, 4290/Verify Interactive Process Monitoring
+    Query: "PM position"
+      First rel rank: None
+      Top-5: 744/360° Multi-Rater Feedback System (MFS), 3484/PJM Selection Report, 3827/.NET Framework 4.5, 3746/PJM Development Report, 4094/.NET MVC (New)
+    Query: "PE position"
+      First rel rank: None
+      Top-5: 4069/Aeronautical Engineering (New), 4004/Aerospace Engineering (New), 4219/Assessment and Development Center Exercises, 3827/.NET Framework 4.5, 4000/Electronics and Embedded Systems Engineering (New)
+
+  Category: cognitive (count=16, P@1=0.1250)
+    Query: "We need to evaluate cybersecurity for a senior position what assessments do you have that can measure both experience and aptitude"
+      First rel rank: 3
+      Top-5: 4284/HiPo Assessment Report 2.0, 4053/Cyber Risk (New), 3942/Reading Comprehension v2, 4100/Networking and Implementation (New), 3472/Reading Comprehension - English v1
+    Query: "We need to evaluate api testing for a senior position what assessments do you have that can measure both experience and aptitude"
+      First rel rank: 4
+      Top-5: 4284/HiPo Assessment Report 2.0, 3768/Verify - Technical Checking - Next Generation, 615/Multitasking Ability, 3942/Reading Comprehension v2, 400/Visual Comparison - US
+    Query: "We need to evaluate docker for a senior position what assessments do you have that can measure both experience and aptitude"
+      First rel rank: 2
+      Top-5: 4059/Docker (New), 3942/Reading Comprehension v2, 615/Multitasking Ability, 3472/Reading Comprehension - English v1, 4284/HiPo Assessment Report 2.0
+
+  Category: assessment_exercises (count=5, P@1=0.2000)
+    Query: "we are hiring for account executive please suggest tests"
+      First rel rank: 2
+      Top-5: 333/Interviewing and Hiring Concepts (U.S.), 3930/Sales & Service Phone Solution, 3733/Verify - Deductive Reasoning, 3992/Financial Accounting (New), 4179/Accounts Receivable (New)
+    Query: "we're looking for a good network engineer assessment"
+      First rel rank: 3
+      Top-5: 4053/Cyber Risk (New), 4100/Networking and Implementation (New), 4219/Assessment and Development Center Exercises, 4020/Telecommunications Engineering (New), 731/Dependability and Safety Instrument (DSI)
+    Query: "we need to screen artificial intelligence candidates"
+      First rel rank: 5
+      Top-5: 3734/Verify - General Ability Screen, 4311/AI Skills, 4171/Search Engine Optimization (New), 40/Split Screen Typing Test - Form 1, 3985/Automata Pro (New)
+
+Report saved to C:\vivek\SHL-assessment-recommendation-agent\benchmark\reports\category_analysis.md
+
+================================================================================
+ANALYSIS 4: RANK DISTRIBUTION -- Where does first relevant result appear?
+================================================================================
+
+--------------------------------------------------
+  FULL CATALOG COVERAGE
+--------------------------------------------------
+
+  Distribution of first-relevant rank:
+  Bucket     Count    %       
+  --------------------------
+  1          1909     84.58   %
+  2-3        287      12.72   %
+  4-5        48       2.13    %
+  6-10       12       0.53    %
+  11-20      1        0.04    %
+  >20        0        0.00    %
+
+  Total queries with relevant found: 2257
+
+  Queries where first relevant is NOT in top-5:
+    Rank  13: "Looking for Microsoft assessment"
+    Rank   6: "OPQ Manager Plus Report"
+    Rank   6: "OPQ Manager Plus"
+    Rank   6: "We are looking for someone with Sales Transformation skills"
+    Rank   7: "We are looking for someone with Sales Transformation skills"
+    Rank   6: "We are looking for someone with SHL Verify Interactive skills"
+    Rank   6: "SHL Verify Interactive"
+    Rank   6: "Looking for SHL Verify Interactive assessment"
+    Rank   7: "SHL Verify Interactive"
+    Rank   9: "Looking for SHL Verify Interactive assessment"
+    ... and 3 more
+
+  Queries where first relevant is NOT in top-10:
+    Rank  13: "Looking for Microsoft assessment"
+
+--------------------------------------------------
+  UNSEEN STRESS TEST
+--------------------------------------------------
+
+  Distribution of first-relevant rank:
+  Bucket     Count    %       
+  --------------------------
+  1          515      49.00   %
+  2-3        268      25.50   %
+  4-5        135      12.84   %
+  6-10       95       9.04    %
+  11-20      38       3.62    %
+  >20        0        0.00    %
+
+  Total queries with relevant found: 1051
+
+  Queries where first relevant is NOT in top-5:
+    Rank   6: "looking for entry level tests for campus hiring"
+    Rank   6: "Need a Risk analyst for our TEAM"
+    Rank   6: "Can you suggest some assessments for sql developer we want to make sure we hire the right person for our growing team thanks"
+    Rank   6: "urgent frontend"
+    Rank   7: "any good options for terraform hiring?"
+    Rank  13: "any good options for sap hiring?"
+    Rank  10: "hiring account executive no delay"
+    Rank   7: "Hey team we need to hire a data engineer who knows how to use all the major tools and frameworks in this space can you please send me some good technical assessments"
+    Rank  20: "need help finding backend tests"
+    Rank   6: "Looking for account executive skill tests for a bulk hiring drive we are planning for next quarter please share catalog and pricing"
+    ... and 123 more
+
+  Queries where first relevant is NOT in top-10:
+    Rank  13: "any good options for sap hiring?"
+    Rank  20: "need help finding backend tests"
+    Rank  20: "compliance officer hire"
+    Rank  11: "looking for a sales beast who can close any deal"
+    Rank  11: "need a Marketing manager who can think outside the box"
+    Rank  15: "hiring a devops samurai"
+    Rank  17: "looking for a automation hero"
+    Rank  11: "looking for docker urgently"
+    Rank  11: "quality analyst with aws"
+    Rank  16: "want azure candidate soon"
+    ... and 28 more
+
+================================================================================
+ANALYSIS 5: LATENCY ANALYSIS
+================================================================================
+
+--------------------------------------------------
+  FULL CATALOG COVERAGE
+--------------------------------------------------
+
+  Latency statistics (ms):
+    Avg:  49.78
+    P50:  46.18
+    P95:  81.96
+    P99:  168.87
+    Max:  1444.97
+    Samples: 2262
+
+  Slowest 10 queries:
+     1.  1444.97 ms -- "Looking for .NET WPF assessment" (cat: dotnet)
+     2.  1084.98 ms -- "IBM Sterling Order Management System" (cat: general)
+     3.   882.02 ms -- "I need to hire .NET WPF" (cat: dotnet)
+     4.   759.94 ms -- "We are looking for someone with Statistical Analysis System skills" (cat: general)
+     5.   679.49 ms -- "We are looking for someone with .NET WPF skills" (cat: dotnet)
+     6.   628.20 ms -- "Following Instructions v1 - UK (R1)" (cat: general)
+     7.   475.86 ms -- "IBM Sterling Order" (cat: general)
+     8.   308.17 ms -- "We are looking for someone with Data Science skills" (cat: general)
+     9.   271.56 ms -- "We are looking for someone with Data Entry Alphanumeric skills" (cat: general)
+    10.   255.79 ms -- "We are looking for someone with Data Entry Numeric skills" (cat: general)
+
+--------------------------------------------------
+  UNSEEN STRESS TEST
+--------------------------------------------------
+
+  Latency statistics (ms):
+    Avg:  26.59
+    P50:  24.97
+    P95:  37.92
+    P99:  49.10
+    Max:  78.60
+    Samples: 1119
+
+  Slowest 10 queries:
+     1.    78.60 ms -- "hey what do you have for api testing?" (cat: backend)
+     2.    76.69 ms -- "hiring a deep learning with a can-do attitude" (cat: data_science)
+     3.    75.39 ms -- "need a react developer who can think outside the box" (cat: frontend)
+     4.    69.83 ms -- "We are expanding our compliance officer team and need to evaluate both technical" (cat: personality_behavior)
+     5.    65.85 ms -- "service desk analyst who knows test automation" (cat: personality_behavior)
+     6.    63.79 ms -- "compliance officer" (cat: knowledge_skills)
+     7.    55.54 ms -- "Hi there we are trying to fill a quality analyst position urgently and need to t" (cat: biodata_situational_judgment)
+     8.    55.44 ms -- "finance and accounting assessments" (cat: finance)
+     9.    54.87 ms -- "engineering manager search" (cat: management)
+    10.    54.04 ms -- "We have an opening for a kubernetes and need to screen about 15 candidates next " (cat: devops)
+
+================================================================================
+ANALYSIS 6: TEXTUAL OVERLAP -- Can simple queries find each assessment?
+================================================================================
+
+Assessments that were retrieved 0-1 times in stress audit: 20 found
+Analyzing first 20:
+
+
+  [3778] Adobe Photoshop CC
+  Description: The Adobe Photoshop CC test measures knowledge of Adobe Photoshop CC. Designed for experienced users, this test covers the following topics: 3D, Color
+  Keys: ['Knowledge & Skills']
+  Times retrieved: 0
+  Generated queries:
+    Q1: "Adobe Photoshop"
+      -> Stress benchmark knows it as relevant for: "Looking for Change management DEVELOPER"
+      -> Audit did NOT retrieve it for this query!
+    Q2: "experience with adobe and photoshop and measures"
+      -> Stress benchmark knows it as relevant for: "Looking for Change management DEVELOPER"
+      -> Audit did NOT retrieve it for this query!
+    Q3: "looking for adobe photoshop cc"
+      -> Stress benchmark knows it as relevant for: "Looking for Change management DEVELOPER"
+      -> Audit did NOT retrieve it for this query!
+  Diagnosis: single classification key
+
+  [3994] MS Word (New)
+  Description: Multi-choice test that measures the ability to use MS Word to record and save textual information.
+  Keys: ['Knowledge & Skills']
+  Times retrieved: 0
+  Generated queries:
+    Q1: "Word"
+      -> No stress benchmark query lists this as relevant.
+    Q2: "experience with multi and choice and measures"
+      -> No stress benchmark query lists this as relevant.
+    Q3: "looking for ms word (new)"
+      -> No stress benchmark query lists this as relevant.
+  Diagnosis: single classification key, very short (4 min), short description
+
+  [4048] General Diseases (New)
+  Description: Multi-choice test that measures the knowledge of common diseases of ear, nose, throat and teeth, their symptoms, drugs used to treat them and various 
+  Keys: ['Knowledge & Skills']
+  Times retrieved: 0
+  Generated queries:
+    Q1: "General Diseases"
+      -> No stress benchmark query lists this as relevant.
+    Q2: "experience with multi and choice and measures"
+      -> No stress benchmark query lists this as relevant.
+    Q3: "looking for general diseases (new)"
+      -> No stress benchmark query lists this as relevant.
+  Diagnosis: single classification key, very short (5 min)
+
+  [4161] Biochemistry (New)
+  Description: Multi-choice test that measures the knowledge of various bio-molecules like amino acids, proteins, enzymes, carbohydrates, vitamins and nucleic acids,
+  Keys: ['Knowledge & Skills']
+  Times retrieved: 0
+  Generated queries:
+    Q1: "Biochemistry"
+      -> Stress benchmark knows it as relevant for: "need a candidate who knows python like the back of their hand"
+      -> Audit did NOT retrieve it for this query!
+    Q2: "experience with multi and choice and measures"
+      -> Stress benchmark knows it as relevant for: "need a candidate who knows python like the back of their hand"
+      -> Audit did NOT retrieve it for this query!
+    Q3: "looking for biochemistry (new)"
+      -> Stress benchmark knows it as relevant for: "need a candidate who knows python like the back of their hand"
+      -> Audit did NOT retrieve it for this query!
+  Diagnosis: single classification key
+
+  [4095] Prism (New)
+  Description: Multi-choice test that measures the knowledge of modules, patterns and other basic concepts of using the Prism library.
+  Keys: ['Knowledge & Skills']
+  Times retrieved: 0
+  Generated queries:
+    Q1: "Prism"
+      -> No stress benchmark query lists this as relevant.
+    Q2: "experience with multi and choice and measures"
+      -> No stress benchmark query lists this as relevant.
+    Q3: "looking for prism (new)"
+      -> No stress benchmark query lists this as relevant.
+  Diagnosis: single classification key, very short (4 min)
+
+  [4044] Ceramic Engineering (New)
+  Description: Multi-choice test that measures the knowledge of classification of ceramic materials, production of ceramics and thermodynamics.
+  Keys: ['Knowledge & Skills']
+  Times retrieved: 0
+  Generated queries:
+    Q1: "Ceramic Engineering"
+      -> Stress benchmark knows it as relevant for: "software engineer"
+      -> Audit did NOT retrieve it for this query!
+    Q2: "experience with multi and choice and measures"
+      -> Stress benchmark knows it as relevant for: "software engineer"
+      -> Audit did NOT retrieve it for this query!
+    Q3: "looking for ceramic engineering (new)"
+      -> Stress benchmark knows it as relevant for: "software engineer"
+      -> Audit did NOT retrieve it for this query!
+  Diagnosis: single classification key
+
+  [4115] Apache Pig (New)
+  Description: Multi-choice test that measures the knowledge of Pig architecture, built-in operators, built-in functions and commands in PigLatin.
+  Keys: ['Knowledge & Skills']
+  Times retrieved: 0
+  Generated queries:
+    Q1: "Apache Pig"
+      -> Stress benchmark knows it as relevant for: "machine learning opening"
+      -> Audit did NOT retrieve it for this query!
+    Q2: "experience with multi and choice and measures"
+      -> Stress benchmark knows it as relevant for: "machine learning opening"
+      -> Audit did NOT retrieve it for this query!
+    Q3: "looking for apache pig (new)"
+      -> Stress benchmark knows it as relevant for: "machine learning opening"
+      -> Audit did NOT retrieve it for this query!
+  Diagnosis: single classification key
+
+  [3998] Pediatrics (New)
+  Description: Multi-choice test that measures the basic knowledge of pediatric diseases, their symptoms and the medicines administered to cure or prevent them.
+  Keys: ['Knowledge & Skills']
+  Times retrieved: 0
+  Generated queries:
+    Q1: "Pediatrics"
+      -> No stress benchmark query lists this as relevant.
+    Q2: "experience with multi and choice and measures"
+      -> No stress benchmark query lists this as relevant.
+    Q3: "looking for pediatrics (new)"
+      -> No stress benchmark query lists this as relevant.
+  Diagnosis: single classification key, very short (5 min)
+
+  [4058] Medical Terminology (New)
+  Description: Multi-choice test that measures the knowledge of different medical terms and abbreviations related to the human body, diseases and diagnosis.
+  Keys: ['Knowledge & Skills']
+  Times retrieved: 0
+  Generated queries:
+    Q1: "Medical Terminology"
+      -> No stress benchmark query lists this as relevant.
+    Q2: "experience with multi and choice and measures"
+      -> No stress benchmark query lists this as relevant.
+    Q3: "looking for medical terminology (new)"
+      -> No stress benchmark query lists this as relevant.
+  Diagnosis: single classification key, very short (3 min)
+
+  [4096] Molecular Biology (New)
+  Description: Multi-choice test that measures the knowledge of molecular genetics, transgenics, rDNA technology, chromosomal genetics, transformation and related pr
+  Keys: ['Knowledge & Skills']
+  Times retrieved: 0
+  Generated queries:
+    Q1: "Molecular Biology"
+      -> Stress benchmark knows it as relevant for: "tech lead"
+      -> Audit did NOT retrieve it for this query!
+    Q2: "experience with multi and choice and measures"
+      -> Stress benchmark knows it as relevant for: "tech lead"
+      -> Audit did NOT retrieve it for this query!
+    Q3: "looking for molecular biology (new)"
+      -> Stress benchmark knows it as relevant for: "tech lead"
+      -> Audit did NOT retrieve it for this query!
+  Diagnosis: single classification key
+
+  [4107] Paint Technology (New)
+  Description: Multi-choice test that measures the knowledge of paint raw materials and precursors, manufacture of different types of coatings, surface treatment and
+  Keys: ['Knowledge & Skills']
+  Times retrieved: 0
+  Generated queries:
+    Q1: "Paint Technology"
+      -> Stress benchmark knows it as relevant for: "tech lead"
+      -> Audit did NOT retrieve it for this query!
+    Q2: "experience with multi and choice and measures"
+      -> Stress benchmark knows it as relevant for: "tech lead"
+      -> Audit did NOT retrieve it for this query!
+    Q3: "looking for paint technology (new)"
+      -> Stress benchmark knows it as relevant for: "tech lead"
+      -> Audit did NOT retrieve it for this query!
+  Diagnosis: single classification key
+
+  [4114] Pharmaceutical Chemistry (New)
+  Description: Multi-choice test that measures the knowledge of physical chemistry, organic chemistry, inorganic chemistry, biochemistry and medicinal chemistry.
+  Keys: ['Knowledge & Skills']
+  Times retrieved: 0
+  Generated queries:
+    Q1: "Pharmaceutical Chemistry"
+      -> No stress benchmark query lists this as relevant.
+    Q2: "experience with multi and choice and measures"
+      -> No stress benchmark query lists this as relevant.
+    Q3: "looking for pharmaceutical chemistry (new)"
+      -> No stress benchmark query lists this as relevant.
+  Diagnosis: single classification key
+
+  [4111] Pharmaceutics (New)
+  Description: Multi-choice test that measures the knowledge of pharmaceutical engineering and technology for drug manufacture, biopharmaceutics, modern pharmaceutic
+  Keys: ['Knowledge & Skills']
+  Times retrieved: 0
+  Generated queries:
+    Q1: "Pharmaceutics"
+      -> Stress benchmark knows it as relevant for: "need a tech wizard for our team"
+      -> Audit did NOT retrieve it for this query!
+    Q2: "experience with multi and choice and measures"
+      -> Stress benchmark knows it as relevant for: "need a tech wizard for our team"
+      -> Audit did NOT retrieve it for this query!
+    Q3: "looking for pharmaceutics (new)"
+      -> Stress benchmark knows it as relevant for: "need a tech wizard for our team"
+      -> Audit did NOT retrieve it for this query!
+  Diagnosis: single classification key
+
+  [4154] Organic Chemistry (New)
+  Description: Multi-choice test that measures the knowledge of the basic concepts in organic chemistry.
+  Keys: ['Knowledge & Skills']
+  Times retrieved: 0
+  Generated queries:
+    Q1: "Organic Chemistry"
+      -> No stress benchmark query lists this as relevant.
+    Q2: "experience with multi and choice and measures"
+      -> No stress benchmark query lists this as relevant.
+    Q3: "looking for organic chemistry (new)"
+      -> No stress benchmark query lists this as relevant.
+  Diagnosis: single classification key, short description
+
+  [17] Written English v1
+  Description: The Written English test measures knowledge of US English grammar and English reading comprehension. It is designed for those with English as a second
+  Keys: ['Knowledge & Skills']
+  Times retrieved: 0
+  Generated queries:
+    Q1: "Written English"
+      -> Stress benchmark knows it as relevant for: "looking for entry level tests for campus hiring"
+      -> Audit did NOT retrieve it for this query!
+    Q2: "experience with written and english and measures"
+      -> Stress benchmark knows it as relevant for: "looking for entry level tests for campus hiring"
+      -> Audit did NOT retrieve it for this query!
+    Q3: "looking for written english v1"
+      -> Stress benchmark knows it as relevant for: "looking for entry level tests for campus hiring"
+      -> Audit did NOT retrieve it for this query!
+  Diagnosis: single classification key
+
+  [4162] Dermatology (New)
+  Description: Multi-choice test that measures the knowledge of various diseases related to skin, their symptoms, the drugs used to treat them, and different termino
+  Keys: ['Knowledge & Skills']
+  Times retrieved: 0
+  Generated queries:
+    Q1: "Dermatology"
+      -> Stress benchmark knows it as relevant for: "we need to screen artificial intelligence candidates"
+      -> Audit did NOT retrieve it for this query!
+    Q2: "experience with multi and choice and measures"
+      -> Stress benchmark knows it as relevant for: "we need to screen artificial intelligence candidates"
+      -> Audit did NOT retrieve it for this query!
+    Q3: "looking for dermatology (new)"
+      -> Stress benchmark knows it as relevant for: "we need to screen artificial intelligence candidates"
+      -> Audit did NOT retrieve it for this query!
+  Diagnosis: single classification key, very short (3 min)
+
+  [3993] MS Excel (New)
+  Description: Multi-choice test that measures the ability to use MS Excel to maintain, organize, analyze and present numeric data.
+  Keys: ['Knowledge & Skills']
+  Times retrieved: 1
+  Generated queries:
+    Q1: "Excel"
+      -> Stress benchmark knows it as relevant for: "data analyst product manager"
+      -> Audit did NOT retrieve it for this query!
+    Q2: "experience with multi and choice and measures"
+      -> Stress benchmark knows it as relevant for: "data analyst product manager"
+      -> Audit did NOT retrieve it for this query!
+    Q3: "looking for ms excel (new)"
+      -> Stress benchmark knows it as relevant for: "data analyst product manager"
+      -> Audit did NOT retrieve it for this query!
+  Diagnosis: single classification key
+
+  [393] Proofreading v1
+  Description: This assessment measures ability to read for errors involving spelling, punctuation, grammar and word choice. It also measures ability to correct thos
+  Keys: ['Knowledge & Skills']
+  Times retrieved: 1
+  Generated queries:
+    Q1: "Proofreading"
+      -> Stress benchmark knows it as relevant for: "we need a good database assessment for our dba role"
+      -> Audit did NOT retrieve it for this query!
+    Q2: "experience with assessment and measures and ability"
+      -> Stress benchmark knows it as relevant for: "we need a good database assessment for our dba role"
+      -> Audit did NOT retrieve it for this query!
+    Q3: "looking for proofreading v1"
+      -> Stress benchmark knows it as relevant for: "we need a good database assessment for our dba role"
+      -> Audit did NOT retrieve it for this query!
+  Diagnosis: single classification key
+
+  [3947] SHL Verify Interactive – Deductive Reasoning
+  Description: Measures the ability to draw logical conclusions based on information provided, identify strengths and weaknesses of arguments, and complete scenarios
+  Keys: ['Ability & Aptitude', 'Simulations']
+  Times retrieved: 1
+  Generated queries:
+    Q1: "SHL Verify Interactive Deductive"
+      -> No stress benchmark query lists this as relevant.
+    Q2: "need someone skilled in shl verify interactive"
+      -> No stress benchmark query lists this as relevant.
+    Q3: "experience with measures and ability and logical"
+      -> No stress benchmark query lists this as relevant.
+  Diagnosis: No obvious issues detected
+
+  [4097] MS PowerPoint (New)
+  Description: Multi-choice test that measures the knowledge of MS PowerPoint toolbars, slide layouts, animation, slideshow, slide designs and formats.
+  Keys: ['Knowledge & Skills']
+  Times retrieved: 1
+  Generated queries:
+    Q1: "PowerPoint"
+      -> No stress benchmark query lists this as relevant.
+    Q2: "experience with multi and choice and measures"
+      -> No stress benchmark query lists this as relevant.
+    Q3: "looking for ms powerpoint (new)"
+      -> No stress benchmark query lists this as relevant.
+  Diagnosis: single classification key, very short (4 min)
+
+================================================================================
+DEEP AUDIT ANALYSIS COMPLETE
+================================================================================

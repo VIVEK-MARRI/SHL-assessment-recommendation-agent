@@ -73,6 +73,8 @@ class ChatService:
             retrieval_query = self._query_builder.build(state=state, decision=decision)
             hybrid_result = self._hybrid_retriever.search(
                 query=retrieval_query.query_text,
+                state=state,
+                filters=retrieval_query.filters,
                 top_k=20,
             )
             retrieved_assessments = hybrid_result.results
@@ -80,7 +82,7 @@ class ChatService:
 
         # 3b. Comparison pipeline for COMPARE
         elif decision.route in _COMPARISON_ROUTES:
-            comparison_context = self._comparison_pipeline.run(state)
+            comparison_context = self._comparison_pipeline.run(state, decision)
             logger.info(
                 "Comparison context: possible=%s", comparison_context.comparison_possible
             )
