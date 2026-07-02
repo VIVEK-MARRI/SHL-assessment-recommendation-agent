@@ -1,82 +1,73 @@
-# Byte-compiled / optimized / DLL files
+# ── Python ────────────────────────────────────────────────────────────────────
 __pycache__/
 *.py[cod]
 *$py.class
-
-# C extensions
 *.so
-
-# Distribution / packaging
-.Python
+*.egg
+*.egg-info/
+.eggs/
 build/
 dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
 
-# Unit test / coverage reports
-.coverage
-.coverage.*
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
-htmlcov/
-.tox/
-.nox/
+# ── Virtual environments ──────────────────────────────────────────────────────
+.venv/
+venv/
+env/
+ENV/
 
-# Environments
+# ── Environment / secrets ─────────────────────────────────────────────────────
 .env
 .env.*
 !.env.example
-.venv/
-venv/
-ENV/
-env/
 
-# IDE / editor settings
+# ── Test / coverage artifacts ─────────────────────────────────────────────────
+.coverage
+.coverage.*
+.pytest_cache/
+htmlcov/
+.tox/
+.nox/
+tmp_pytest*/
+
+# ── Type-checking / lint caches ───────────────────────────────────────────────
+.mypy_cache/
+.ruff_cache/
+
+# ── IDE / editor ──────────────────────────────────────────────────────────────
 .vscode/
 .idea/
 *.suo
 *.user
-*.userosscache
-*.sln.docstates
+*.swp
+*.swo
 
-# Logs
+# ── Logs ─────────────────────────────────────────────────────────────────────
 *.log
-logs/*
-!logs/.gitkeep
+logs/
 
-# Python notebook checkpoints
-.ipynb_checkpoints/
-
-# Model caches and artifacts
+# ── Model / embedding caches ──────────────────────────────────────────────────
 .cache/
-cache/
-models_cache/
 .huggingface/
 .transformers/
 
-# Vector and search indexes
+# ── Search indexes (generated — rebuild with scripts/build_*.py) ──────────────
+indexes/
 *.faiss
+*.pkl
 *.index
 *.idx
-indexes/
 
-# OS files
+# ── Large benchmark / audit data files ────────────────────────────────────────
+benchmark/audit_full_catalog_coverage.json
+benchmark/audit_unseen_stress_test.json
+benchmark/stress_benchmark.json
+benchmark/full_coverage_benchmark.json
+benchmark/retrieval_benchmark.json
+
+# ── OS ────────────────────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
 
-# Temporary files
+# ── Temporary files ───────────────────────────────────────────────────────────
 *.tmp
 *.temp
-*.swp
-*.swo

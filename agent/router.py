@@ -77,7 +77,37 @@ class RuleBasedRouter:
             return decision
 
         # Step 3: CLARIFY only when the state lacks a useful retrieval signal.
+        # Issue 5: If role is present AND technical_skills is non-empty BUT seniority is
+        # None, route to CLARIFY to ask seniority BEFORE checking the confidence gate.
+        # Exception: if the LLM has already marked clarification_needed=False (proxy for
+        # "we've been through enough clarifications"), skip this and proceed to RECOMMEND.
+        if (
+            state.role is not None
+            and state.technical_skills
+            and state.seniority is None
+            and state.clarification_needed  # LLM-driven turn budget signal
+        ):
+            decision = RoutingDecision(
+                route=RouteType.CLARIFY,
+                next_module="clarification",
+                reason="Role and technical skills are known but seniority is missing.",
+                confidence="MEDIUM",
+                clarification_field="seniority",
+                query_required=False,
+                comparison_required=False,
+                recommendation_required=False
+            )
+            logger.info(f"Selected route: {decision.route}, Reason: {decision.reason}")
+            logger.debug(
+                "Routing decision=%s reason=%s state=%s",
+                decision.route,
+                decision.reason,
+                state.model_dump()
+            )
+            return decision
+
         if state.clarification_needed and not self._is_sufficient_information(state):
+
             clarification_field = self._determine_clarification_field(state)
             decision = RoutingDecision(
                 route=RouteType.CLARIFY,

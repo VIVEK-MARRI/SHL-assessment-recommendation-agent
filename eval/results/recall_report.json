@@ -1,0 +1,241 @@
+{
+  "mean_recall_at_10": 0.0,
+  "traces": {
+    "C1": {
+      "recall_at_10": 0.0,
+      "expected_names": [
+        "Occupational Personality Questionnaire OPQ32r",
+        "OPQ Universal Competency Report 2.0",
+        "OPQ Leadership Report"
+      ],
+      "retrieved_names": [],
+      "matched_names": [],
+      "missed_names": [
+        "Occupational Personality Questionnaire OPQ32r",
+        "OPQ Universal Competency Report 2.0",
+        "OPQ Leadership Report"
+      ],
+      "hallucinated_urls": [],
+      "schema_violations": [
+        "turn 3: HTTP 429"
+      ],
+      "turns_used": 2,
+      "end_of_conversation_fired": false
+    },
+    "C2": {
+      "recall_at_10": 0.0,
+      "expected_names": [
+        "Smart Interview Live Coding",
+        "Linux Programming (General)",
+        "Networking and Implementation (New)",
+        "SHL Verify Interactive G+",
+        "Occupational Personality Questionnaire OPQ32r"
+      ],
+      "retrieved_names": [],
+      "matched_names": [],
+      "missed_names": [
+        "Smart Interview Live Coding",
+        "Linux Programming (General)",
+        "Networking and Implementation (New)",
+        "SHL Verify Interactive G+",
+        "Occupational Personality Questionnaire OPQ32r"
+      ],
+      "hallucinated_urls": [],
+      "schema_violations": [
+        "turn 1: HTTP 429"
+      ],
+      "turns_used": 0,
+      "end_of_conversation_fired": false
+    },
+    "C3": {
+      "recall_at_10": 0.0,
+      "expected_names": [
+        "SVAR Spoken English (US) (New)",
+        "Contact Center Call Simulation (New)",
+        "Entry Level Customer Serv - Retail & Contact Center",
+        "Customer Service Phone Simulation"
+      ],
+      "retrieved_names": [],
+      "matched_names": [],
+      "missed_names": [
+        "SVAR Spoken English (US) (New)",
+        "Contact Center Call Simulation (New)",
+        "Entry Level Customer Serv - Retail & Contact Center",
+        "Customer Service Phone Simulation"
+      ],
+      "hallucinated_urls": [],
+      "schema_violations": [
+        "turn 1: HTTP 429"
+      ],
+      "turns_used": 0,
+      "end_of_conversation_fired": false
+    },
+    "C4": {
+      "recall_at_10": 0.0,
+      "expected_names": [
+        "SHL Verify Interactive \u2013 Numerical Reasoning",
+        "Financial Accounting (New)",
+        "Basic Statistics (New)",
+        "Graduate Scenarios",
+        "Occupational Personality Questionnaire OPQ32r"
+      ],
+      "retrieved_names": [],
+      "matched_names": [],
+      "missed_names": [
+        "SHL Verify Interactive \u2013 Numerical Reasoning",
+        "Financial Accounting (New)",
+        "Basic Statistics (New)",
+        "Graduate Scenarios",
+        "Occupational Personality Questionnaire OPQ32r"
+      ],
+      "hallucinated_urls": [],
+      "schema_violations": [
+        "turn 1: HTTP 429"
+      ],
+      "turns_used": 0,
+      "end_of_conversation_fired": false
+    },
+    "C5": {
+      "recall_at_10": 0.0,
+      "expected_names": [
+        "Global Skills Assessment",
+        "Global Skills Development Report",
+        "Occupational Personality Questionnaire OPQ32r",
+        "OPQ MQ Sales Report",
+        "Sales Transformation 2.0 - Individual Contributor"
+      ],
+      "retrieved_names": [],
+      "matched_names": [],
+      "missed_names": [
+        "Global Skills Assessment",
+        "Global Skills Development Report",
+        "Occupational Personality Questionnaire OPQ32r",
+        "OPQ MQ Sales Report",
+        "Sales Transformation 2.0 - Individual Contributor"
+      ],
+      "hallucinated_urls": [],
+      "schema_violations": [
+        "turn 1: HTTP 429"
+      ],
+      "turns_used": 0,
+      "end_of_conversation_fired": false
+    },
+    "C6": {
+      "recall_at_10": 0.0,
+      "expected_names": [
+        "Manufac. & Indust. - Safety & Dependability 8.0",
+        "Workplace Health and Safety (New)"
+      ],
+      "retrieved_names": [],
+      "matched_names": [],
+      "missed_names": [
+        "Manufac. & Indust. - Safety & Dependability 8.0",
+        "Workplace Health and Safety (New)"
+      ],
+      "hallucinated_urls": [],
+      "schema_violations": [
+        "turn 1: HTTP 429"
+      ],
+      "turns_used": 0,
+      "end_of_conversation_fired": false
+    },
+    "C7": {
+      "recall_at_10": 0.0,
+      "expected_names": [
+        "HIPAA (Security)",
+        "Medical Terminology (New)",
+        "Microsoft Word 365 - Essentials (New)",
+        "Dependability and Safety Instrument (DSI)",
+        "Occupational Personality Questionnaire OPQ32r"
+      ],
+      "retrieved_names": [],
+      "matched_names": [],
+      "missed_names": [
+        "HIPAA (Security)",
+        "Medical Terminology (New)",
+        "Microsoft Word 365 - Essentials (New)",
+        "Dependability and Safety Instrument (DSI)",
+        "Occupational Personality Questionnaire OPQ32r"
+      ],
+      "hallucinated_urls": [],
+      "schema_violations": [
+        "turn 1: HTTP 429"
+      ],
+      "turns_used": 0,
+      "end_of_conversation_fired": false
+    },
+    "C8": {
+      "recall_at_10": 0.0,
+      "expected_names": [
+        "Microsoft Excel 365 (New)",
+        "Microsoft Word 365 (New)",
+        "MS Excel (New)",
+        "MS Word (New)",
+        "Occupational Personality Questionnaire OPQ32r"
+      ],
+      "retrieved_names": [],
+      "matched_names": [],
+      "missed_names": [
+        "Microsoft Excel 365 (New)",
+        "Microsoft Word 365 (New)",
+        "MS Excel (New)",
+        "MS Word (New)",
+        "Occupational Personality Questionnaire OPQ32r"
+      ],
+      "hallucinated_urls": [],
+      "schema_violations": [
+        "turn 1: HTTP 429"
+      ],
+      "turns_used": 0,
+      "end_of_conversation_fired": false
+    },
+    "C9": {
+      "recall_at_10": 0.0,
+      "expected_names": [
+        "Core Java (Advanced Level) (New)",
+        "Spring (New)",
+        "SQL (New)",
+        "Amazon Web Services (AWS) Development (New)",
+        "Docker (New)",
+        "SHL Verify Interactive G+",
+        "Occupational Personality Questionnaire OPQ32r"
+      ],
+      "retrieved_names": [],
+      "matched_names": [],
+      "missed_names": [
+        "Core Java (Advanced Level) (New)",
+        "Spring (New)",
+        "SQL (New)",
+        "Amazon Web Services (AWS) Development (New)",
+        "Docker (New)",
+        "SHL Verify Interactive G+",
+        "Occupational Personality Questionnaire OPQ32r"
+      ],
+      "hallucinated_urls": [],
+      "schema_violations": [
+        "turn 1: HTTP 429"
+      ],
+      "turns_used": 0,
+      "end_of_conversation_fired": false
+    },
+    "C10": {
+      "recall_at_10": 0.0,
+      "expected_names": [
+        "SHL Verify Interactive G+",
+        "Graduate Scenarios"
+      ],
+      "retrieved_names": [],
+      "matched_names": [],
+      "missed_names": [
+        "SHL Verify Interactive G+",
+        "Graduate Scenarios"
+      ],
+      "hallucinated_urls": [],
+      "schema_violations": [
+        "turn 1: HTTP 429"
+      ],
+      "turns_used": 0,
+      "end_of_conversation_fired": false
+    }
+  }
+}

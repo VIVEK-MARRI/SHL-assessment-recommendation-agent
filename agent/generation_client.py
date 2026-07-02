@@ -153,4 +153,6 @@ class GenerationClient:
             return "https://api.groq.com/openai/v1/chat/completions"
         if self._config.provider == "openrouter":
             return "https://openrouter.ai/api/v1/chat/completions"
+        if self._config.provider == "gemini":
+            return "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions"
         raise ProviderError("Unsupported LLM provider")

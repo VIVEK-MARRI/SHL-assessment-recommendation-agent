@@ -79,8 +79,8 @@ def test_recommend_route(mock_catalog: ResponseCatalog) -> None:
     assert response.recommendations is not None
     assert len(response.recommendations) == 2
     assert response.recommendations[0].name == "Python Advanced"
-    assert response.recommendations[0].url == "http://shl.com/python-adv"
-    assert response.recommendations[0].test_type == ["Knowledge & Skills"]
+    assert response.recommendations[0].url == "http://shl.com/python-adv/"  # catalog normalises to trailing slash
+    assert response.recommendations[0].test_type == "K"
     assert response.recommendations[1].name == "Java Basics"
 
 
@@ -93,7 +93,7 @@ def test_refine_route(mock_catalog: ResponseCatalog) -> None:
 
     assert response.recommendations is not None
     assert response.recommendations[0].name == "OPQ32r"
-    assert response.recommendations[0].test_type == ["Personality & Behavior"]
+    assert response.recommendations[0].test_type == "P"
 
 
 def test_compare_route(mock_catalog: ResponseCatalog) -> None:

@@ -27,7 +27,7 @@ def _build_client(chat_response=None, side_effect=None):
                 Recommendation(
                     name="Python Advanced",
                     url="http://shl.com/python",
-                    test_type=["Knowledge & Skills"],
+                    test_type="K",  # str code, not list — matches Recommendation model
                 )
             ],
         )
@@ -73,7 +73,7 @@ def test_chat_success(success_client) -> None:
     assert data["recommendations"] is not None
     assert data["recommendations"][0]["name"] == "Python Advanced"
     assert data["recommendations"][0]["url"] == "http://shl.com/python"
-    assert data["recommendations"][0]["test_type"] == ["Knowledge & Skills"]
+    assert data["recommendations"][0]["test_type"] == "K"  # str code, not list
 
 
 def test_chat_clarify_null_recommendations() -> None:

@@ -463,3 +463,46 @@ def test_generation_grounding_override_on_refine_route() -> None:
 
     assert result.recommended_names == ["Python Test"]
     assert "most relevant assessments" in result.reply
+
+def test_recommend_deterministic_short_circuit_unknown_names():
+    pkg = PromptPackage(
+        system_prompt="sys",
+        user_prompt="user",
+        route=RouteType.RECOMMEND,
+        mentioned_assessment_names=["Myers Briggs"],
+        unmatched_names=[],
+        grounding_assessments=[],
+        metadata=PromptMetadata(prompt_version="1.0", route=RouteType.RECOMMEND)
+    )
+    client = MockGenerationClient([
+        {"content": '{"reply": "This should not be called", "recommended_names": []}'}
+    ])
+    generator = ResponseGenerator(client=client)
+    
+    result = generator.generate(pkg)
+    
+    assert "do not appear in the SHL catalog: 'Myers Briggs'" in result.reply
+    assert result.recommended_names == []
+    # Assert client was not called
+    assert client.call_count == 0
+
+def test_refine_deterministic_short_circuit_unknown_names():
+    pkg = PromptPackage(
+        system_prompt="sys",
+        user_prompt="user",
+        route=RouteType.REFINE,
+        mentioned_assessment_names=["Nonexistent Test"],
+        unmatched_names=[],
+        grounding_assessments=[],
+        metadata=PromptMetadata(prompt_version="1.0", route=RouteType.REFINE)
+    )
+    client = MockGenerationClient([
+        {"content": '{"reply": "This should not be called", "recommended_names": []}'}
+    ])
+    generator = ResponseGenerator(client=client)
+    
+    result = generator.generate(pkg)
+    
+    assert "do not appear in the SHL catalog: 'Nonexistent Test'" in result.reply
+    assert result.recommended_names == []
+    assert client.call_count == 0

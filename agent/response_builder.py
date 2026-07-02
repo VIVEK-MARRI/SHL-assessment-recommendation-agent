@@ -11,6 +11,8 @@ from agent.validator_models import ValidatedGenerationResult
 logger = logging.getLogger(__name__)
 
 _ROUTES_WITH_RECOMMENDATIONS = {RouteType.RECOMMEND, RouteType.REFINE, RouteType.COMPARE}
+# Issue 2: end_of_conversation may only be True on these routes
+_ROUTES_ALLOWING_EOC = {RouteType.RECOMMEND, RouteType.REFINE, RouteType.COMPARE}
 _MAX_RECOMMENDATIONS = 10
 
 
@@ -61,10 +63,14 @@ class ResponseBuilder:
             elapsed_ms,
         )
 
+        # Issue 2: end_of_conversation is ONLY allowed to be True on RECOMMEND/REFINE/COMPARE.
+        # Refusals (REFUSE) and clarifications (CLARIFY) must always return False.
+        eoc = validated.end_of_conversation if route in _ROUTES_ALLOWING_EOC else False
+
         return ChatResponse(
             reply=reply,
             recommendations=recommendations,
-            end_of_conversation=validated.end_of_conversation,
+            end_of_conversation=eoc,
         )
 
     def _build_recommendations(

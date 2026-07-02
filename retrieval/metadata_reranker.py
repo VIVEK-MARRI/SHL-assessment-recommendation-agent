@@ -181,6 +181,10 @@ _CAPABILITY_TERMS = {
 class MetadataReranker:
     """Post-retrieval re-ranking using attached metadata."""
 
+    # Issue 7: entity_id pinning for core personality instruments
+    _PERSONALITY_CORE_IDS: frozenset[str] = frozenset({"720", "724"})
+    _PERSONALITY_CORE_BOOST: float = 0.50
+
     @classmethod
     def rerank(
         cls,
@@ -190,6 +194,9 @@ class MetadataReranker:
     ) -> list[RetrievedAssessment]:
         """Apply deterministic metadata boosting and penalties."""
         started_at = perf_counter()
+
+        # Issues 4 & 7: Apply explicit metadata boost first, before the full reranking pass.
+        results = cls._apply_metadata_boost(results, state)
 
         reranked_results = []
         for original_position, assessment in enumerate(results, start=1):
@@ -205,6 +212,40 @@ class MetadataReranker:
             tech_penalty = cls._calculate_technology_penalty(assessment, state.technical_skills, state.role)
             exclusion_penalty = cls._calculate_exclusion_penalty(assessment, state.constraints)
 
+            # Issue 7: Personality core instrument pinning — deterministic entity_id boost.
+            # OPQ32r (720) and MQ MQM5 (724) get +0.50 when personality is requested.
+            pin_boost = 0.0
+            if state.personality_required and assessment.entity_id in cls._PERSONALITY_CORE_IDS:
+                pin_boost = cls._PERSONALITY_CORE_BOOST
+                logger.debug(
+                    "Personality core pin: entity_id=%s name=%s boost=+%.2f",
+                    assessment.entity_id, assessment.name, pin_boost,
+                )
+
+            # Issue 4: Domain precision boosts (supplement the existing skill_boost).
+            domain_boost = 0.0
+            for skill in state.technical_skills:
+                skill_lower = skill.lower()
+                name_lower = assessment.name.lower()
+                desc_lower = assessment.description.lower()
+                if skill_lower in name_lower:
+                    domain_boost += 0.40
+                elif skill_lower in desc_lower:
+                    domain_boost += 0.15
+            # Category signal boosts
+            if state.personality_required and "Personality & Behavior" in assessment.keys:
+                domain_boost += 0.20
+            if state.cognitive_required and "Ability & Aptitude" in assessment.keys:
+                domain_boost += 0.20
+            if state.personality_required and "Personality & Behavior" not in assessment.keys:
+                domain_boost -= 0.05
+            # Hard penalty: unrelated domain for technical skill queries
+            if state.technical_skills:
+                unrelated_keys = {"Biodata & Situational Judgment", "Competencies"}
+                if assessment.keys and all(k in unrelated_keys for k in assessment.keys):
+                    if "Knowledge & Skills" not in assessment.keys:
+                        domain_boost -= 0.25
+
             metadata_score = (
                 skill_boost
                 + role_boost
@@ -216,6 +257,8 @@ class MetadataReranker:
                 + language_adjustment
                 - tech_penalty
                 - exclusion_penalty
+                + pin_boost
+                + domain_boost
             )
             final_score = original_score + metadata_score
 
@@ -223,7 +266,7 @@ class MetadataReranker:
                 (
                     "Reranking %s: base=%.4f skill=%.2f role=%.2f jl=%.2f seniority=%.2f "
                     "type=%.2f capability=%.2f duration=%.2f language=%.2f "
-                    "tech_penalty=%.2f exclusion_penalty=%.2f -> %.4f"
+                    "tech_penalty=%.2f exclusion_penalty=%.2f pin=%.2f domain=%.2f -> %.4f"
                 ),
                 assessment.entity_id,
                 original_score,
@@ -237,6 +280,8 @@ class MetadataReranker:
                 language_adjustment,
                 tech_penalty,
                 exclusion_penalty,
+                pin_boost,
+                domain_boost,
                 final_score,
             )
 
@@ -268,6 +313,76 @@ class MetadataReranker:
             (perf_counter() - started_at) * 1000,
         )
         return reranked_results
+
+    @classmethod
+    def _apply_metadata_boost(
+        cls,
+        candidates: list[RetrievedAssessment],
+        state: ConversationState,
+    ) -> list[RetrievedAssessment]:
+        """Issue 4 & 7: Apply a deterministic metadata boost after RRF.
+
+        This function boosts candidates based on explicit skill/level/personality
+        signals in ConversationState, and pins core personality instruments to top
+        when personality is requested.
+        """
+        boosted: list[RetrievedAssessment] = []
+        for doc in candidates:
+            boost = 0.0
+            doc_name_lower = doc.name.lower()
+            doc_desc_lower = doc.description.lower()
+
+            # Issue 7: Personality core instrument pinning — deterministic entity_id boost.
+            # OPQ32r (720) and MQ MQM5 (724) get +0.50 when personality is requested.
+            if state.personality_required and doc.entity_id in cls._PERSONALITY_CORE_IDS:
+                boost += cls._PERSONALITY_CORE_BOOST
+                logger.debug(
+                    "Personality core pin: entity_id=%s name=%s boost=+%.2f",
+                    doc.entity_id, doc.name, cls._PERSONALITY_CORE_BOOST,
+                )
+
+            # Issue 4: Exact or substring skill match in name → strong boost
+            for skill in state.technical_skills:
+                skill_lower = skill.lower()
+                if skill_lower in doc_name_lower:
+                    boost += 0.40
+                elif skill_lower in doc_desc_lower:
+                    boost += 0.15
+
+            # Issue 4: Job level / seniority match boost
+            if state.seniority:
+                for level in doc.job_levels:
+                    if state.seniority.lower() in level.lower():
+                        boost += 0.15
+                        break
+
+            # Issue 4: Category signal boosts
+            if state.personality_required and "Personality & Behavior" in doc.keys:
+                boost += 0.20
+            if state.cognitive_required and "Ability & Aptitude" in doc.keys:
+                boost += 0.20
+            if state.personality_required and "Personality & Behavior" not in doc.keys:
+                boost -= 0.05
+
+            # Issue 4: Hard penalty — unrelated domain when skills are explicit.
+            # Biodata/Competencies-only items (no K&S) get penalized.
+            if state.technical_skills:
+                unrelated_keys = {"Biodata & Situational Judgment", "Competencies"}
+                if doc.keys and all(k in unrelated_keys for k in doc.keys):
+                    if "Knowledge & Skills" not in doc.keys:
+                        boost -= 0.25
+
+            if boost != 0.0:
+                rrf_base = doc.rrf_score if doc.rrf_score is not None else doc.score
+                boosted.append(
+                    doc.model_copy(update={"score": rrf_base + boost})
+                )
+            else:
+                boosted.append(doc)
+
+        # Re-sort by boosted score so subsequent full rerank starts from better order
+        boosted.sort(key=lambda x: -x.score)
+        return boosted
 
     @classmethod
     def _calculate_duration_adjustment(cls, assessment: RetrievedAssessment, filters: QueryFilters) -> float:

@@ -44,11 +44,19 @@ class LLMClientConfig:
         elif provider == "openrouter":
             api_key = os.getenv("OPENROUTER_API_KEY", "").strip()
             default_model = "openai/gpt-4o-mini"
+        elif provider == "gemini":
+            api_key = os.getenv("GEMINI_API_KEY", "").strip()
+            default_model = "gemini-2.5-flash"
         else:
-            raise LLMResponseError("LLM_PROVIDER must be 'groq' or 'openrouter'")
+            raise LLMResponseError("LLM_PROVIDER must be 'groq', 'openrouter', or 'gemini'")
 
         if not api_key:
-            env_name = "GROQ_API_KEY" if provider == "groq" else "OPENROUTER_API_KEY"
+            if provider == "groq":
+                env_name = "GROQ_API_KEY"
+            elif provider == "openrouter":
+                env_name = "OPENROUTER_API_KEY"
+            else:
+                env_name = "GEMINI_API_KEY"
             raise LLMResponseError(f"{env_name} is required for LLM_PROVIDER={provider}")
 
         return cls(
@@ -145,4 +153,6 @@ class LLMClient:
             return "https://api.groq.com/openai/v1/chat/completions"
         if self._config.provider == "openrouter":
             return "https://openrouter.ai/api/v1/chat/completions"
+        if self._config.provider == "gemini":
+            return "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions"
         raise LLMResponseError("Unsupported LLM provider")

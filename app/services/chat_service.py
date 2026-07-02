@@ -17,6 +17,7 @@ from agent.state_extraction import StateExtractor
 from agent.validator import ResponseValidator
 from agent.query_builder import QueryBuilder
 from retrieval.hybrid_retriever import HybridRetriever
+from retrieval.metadata_reranker import MetadataReranker, PENALTY_UNRELATED_TECH
 
 logger = logging.getLogger(__name__)
 
@@ -77,8 +78,20 @@ class ChatService:
                 filters=retrieval_query.filters,
                 top_k=20,
             )
-            retrieved_assessments = hybrid_result.results
-            logger.info("Retrieved %d assessments.", len(retrieved_assessments))
+            
+            # Deterministic post-retrieval filter for explicit technology mismatches
+            filtered_assessments = []
+            for assessment in hybrid_result.results:
+                penalty = MetadataReranker._calculate_technology_penalty(
+                    assessment, state.technical_skills, state.role
+                )
+                if penalty < PENALTY_UNRELATED_TECH:
+                    filtered_assessments.append(assessment)
+                else:
+                    logger.info("Filtered out unrelated technology: %s", assessment.name)
+            
+            retrieved_assessments = filtered_assessments
+            logger.info("Retrieved %d assessments (after technology filter).", len(retrieved_assessments))
 
         # 3b. Comparison pipeline for COMPARE
         elif decision.route in _COMPARISON_ROUTES:

@@ -6,6 +6,36 @@ from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
+# ---------------------------------------------------------------------------
+# test_type code mapping (Issue 1)
+# ---------------------------------------------------------------------------
+
+KEY_TO_CODE: dict[str, str] = {
+    "Knowledge & Skills": "K",
+    "Personality & Behavior": "P",
+    "Ability & Aptitude": "A",
+    "Biodata & Situational Judgment": "B",
+    "Simulations": "S",
+    "Competencies": "C",
+    "Development & 360": "D",
+    "Assessment Exercises": "E",
+}
+
+
+def keys_to_test_type(keys: list[str]) -> str:
+    """Convert a list of category keys to a compact comma-joined code string.
+
+    Example: ["Knowledge & Skills", "Simulations"] → "K,S"
+    Only known keys are included; unknown keys are silently dropped.
+    Returns "K" as a safe default when no known keys are present.
+    """
+    seen: list[str] = []
+    for k in keys:
+        code = KEY_TO_CODE.get(k)
+        if code and code not in seen:
+            seen.append(code)
+    return ",".join(seen) if seen else "K"
+
 
 class CatalogLoadError(Exception):
     """Raised when catalog/catalog.json cannot be loaded."""
@@ -47,10 +77,19 @@ class ResponseCatalog:
             if not isinstance(name, str) or not name.strip():
                 continue
             name = name.strip()
+
+            # Issue 6: Ensure URL always ends with a trailing slash.
+            # catalog.json links never include it; we normalise here so every
+            # lookup returns a URL that satisfies the schema requirement.
             url = item.get("link", "")
-            test_type = item.get("keys") or []
-            if not isinstance(test_type, list):
-                test_type = [str(test_type)]
+            if url and not url.endswith("/"):
+                url = url + "/"
+
+            # Issue 1: Convert keys list → compact code string ("K", "K,S", etc.)
+            raw_keys = item.get("keys") or []
+            if not isinstance(raw_keys, list):
+                raw_keys = [str(raw_keys)]
+            test_type = keys_to_test_type(raw_keys)
 
             self._index[name.lower()] = {
                 "name": name,
@@ -72,3 +111,4 @@ class ResponseCatalog:
                 f"Validated name not found in catalog: {name!r}"
             )
         return record
+

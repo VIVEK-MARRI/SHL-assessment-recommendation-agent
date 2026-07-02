@@ -50,10 +50,24 @@ def test_compare_without_assessments_falls_back(router):
     assert decision.next_module == "clarification"
 
 def test_clarify_explicit(router):
+    """Issue 5: Role + skills with no seniority should ask for seniority."""
     state = ConversationState(
         role="Engineer",
         technical_skills=["Python"],
         clarification_needed=True
+    )
+    decision = router.route(state)
+    # Issue 5: must CLARIFY to ask for seniority (technical role + no seniority)
+    assert decision.route == RouteType.CLARIFY
+    assert decision.clarification_field == "seniority"
+
+def test_clarify_explicit_with_seniority(router):
+    """Role + skills + seniority with clarification_needed=False should RECOMMEND."""
+    state = ConversationState(
+        role="Engineer",
+        technical_skills=["Python"],
+        seniority="senior",
+        clarification_needed=False
     )
     decision = router.route(state)
     assert decision.route == RouteType.RECOMMEND
@@ -118,6 +132,7 @@ def test_priority_order_compare_over_clarify(router):
     assert decision.route == RouteType.COMPARE
 
 def test_priority_order_clarify_over_refine(router):
+    """Issue 5: Seniority clarification takes priority over REFINE when no seniority."""
     state = ConversationState(
         role="Engineer",
         technical_skills=["Python", "Java"],
@@ -125,7 +140,9 @@ def test_priority_order_clarify_over_refine(router):
         refinement_detected=True
     )
     decision = router.route(state)
-    assert decision.route == RouteType.REFINE
+    # Issue 5: seniority question fires before REFINE check when role + tech skills but no seniority
+    assert decision.route == RouteType.CLARIFY
+    assert decision.clarification_field == "seniority"
 
 def test_clarification_priority(router):
     # role missing -> role

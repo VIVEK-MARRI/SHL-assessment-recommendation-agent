@@ -762,7 +762,11 @@ class TestComparisonSpecCompliance:
         ctx = pipeline.run(state, decision)
         assert len(ctx.matched_assessments) >= 2
         assert "FakeAssessmentThatDoesNotExist" in ctx.unmatched_names
-        assert ctx.comparison_possible is True
+        # Issue 3 fix: when ANY named assessment is not in catalog, comparison is NOT possible.
+        # Users asked for a specific non-catalog assessment — we must report it rather than
+        # proceeding with only the matched ones.
+        assert ctx.comparison_possible is False
+        assert "FakeAssessmentThatDoesNotExist" in ctx.reason or "catalog" in ctx.reason.lower()
 
 
 # =========================================================================
@@ -979,14 +983,26 @@ class TestClarificationStrategy:
         decision = router.route(state)
         assert decision.route == RouteType.RECOMMEND
 
-    def test_role_with_skills_does_not_clarify(self) -> None:
-        """Role + skills is sufficient even with clarification_needed=True."""
+    def test_role_with_skills_does_not_clarify_seniority_present(self) -> None:
+        """Role + skills + seniority is sufficient even with clarification_needed=True."""
         from agent.conversation_models import ConversationState
         from agent.router import RuleBasedRouter
         router = RuleBasedRouter()
-        state = ConversationState(role="Engineer", technical_skills=["Python"], clarification_needed=True)
+        # When seniority is present, it should route to RECOMMEND
+        state = ConversationState(role="Engineer", technical_skills=["Python"], seniority="senior", clarification_needed=False)
         decision = router.route(state)
         assert decision.route == RouteType.RECOMMEND
+
+    def test_role_with_skills_no_seniority_asks_seniority(self) -> None:
+        """Issue 5: Role + technical_skills + no seniority routes to CLARIFY for seniority."""
+        from agent.conversation_models import ConversationState
+        from agent.router import RuleBasedRouter
+        router = RuleBasedRouter()
+        # No seniority + clarification_needed=True → ask for seniority
+        state = ConversationState(role="Engineer", technical_skills=["Python"], clarification_needed=True)
+        decision = router.route(state)
+        assert decision.route == RouteType.CLARIFY
+        assert decision.clarification_field == "seniority"
 
     def test_personality_required_does_not_clarify(self) -> None:
         """Personality flag alone routes to RECOMMEND via Step 5."""

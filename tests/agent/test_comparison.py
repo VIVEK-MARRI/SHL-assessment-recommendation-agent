@@ -141,9 +141,13 @@ def test_two_known_one_unknown(pipeline: ComparisonPipeline) -> None:
         ]
     )
     ctx = pipeline.run(state, _compare_decision())
-    assert ctx.comparison_possible is True
+    # Issue 3 fix: if ANY named assessment is unmatched, comparison_possible=False.
+    # The user explicitly asked for "Fake Assessment 999" — we cannot compare without it.
+    assert ctx.comparison_possible is False
     assert len(ctx.matched_assessments) == 2
     assert "Fake Assessment 999" in ctx.unmatched_names
+    # The reason must mention the unmatched name and the catalog
+    assert "Fake Assessment 999" in ctx.reason or "catalog" in ctx.reason.lower()
 
 
 # ---------------------------------------------------------------------------

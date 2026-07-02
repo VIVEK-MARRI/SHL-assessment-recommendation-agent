@@ -88,37 +88,29 @@ class ComparisonPipeline:
         matched, unmatched = self._matcher.match_many(names)
 
         # Determine whether comparison is possible
-        if len(matched) >= 2:
-            comparison_possible = True
+        # Issue 3: If ANY named assessment is unmatched (not in catalog), comparison is NOT
+        # possible — we must explicitly tell the user which names don't exist in the catalog.
+        if unmatched:
+            comparison_possible = False
+            found_names = ", ".join(f"'{m.name}'" for m in matched) if matched else "none"
+            not_found_names = ", ".join(f"'{u}'" for u in unmatched)
             reason = (
-                f"Found {len(matched)} assessments for comparison."
-                + (
-                    f" Could not match: {', '.join(unmatched)}."
-                    if unmatched
-                    else ""
-                )
+                f"The following assessment(s) do not appear in the SHL catalog: {not_found_names}. "
+                f"Found in catalog: {found_names}. "
+                "Please verify the name(s) or ask to compare with a closest available alternative."
             )
+        elif len(matched) >= 2:
+            comparison_possible = True
+            reason = f"Found {len(matched)} assessments for comparison."
         elif len(matched) == 1:
             comparison_possible = False
             reason = (
                 "Need at least two assessments to compare. "
                 f"Only '{matched[0].name}' was found."
-                + (
-                    f" Could not match: {', '.join(unmatched)}."
-                    if unmatched
-                    else ""
-                )
             )
         else:
             comparison_possible = False
-            reason = (
-                "No assessments could be resolved from the catalog."
-                + (
-                    f" Unmatched names: {', '.join(unmatched)}."
-                    if unmatched
-                    else ""
-                )
-            )
+            reason = "No assessments could be resolved from the catalog."
 
         context = ComparisonContext(
             matched_assessments=matched,

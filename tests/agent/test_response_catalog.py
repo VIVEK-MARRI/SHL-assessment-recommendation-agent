@@ -36,8 +36,8 @@ def test_catalog_load_and_lookup(mock_catalog_path: Path) -> None:
     catalog = ResponseCatalog(catalog_path=mock_catalog_path)
     rec = catalog.lookup("Python Advanced")
     assert rec["name"] == "Python Advanced"
-    assert rec["url"] == "http://shl.com/python-adv"
-    assert rec["test_type"] == ["Knowledge & Skills"]
+    assert rec["url"] == "http://shl.com/python-adv/"  # catalog normalises to trailing slash
+    assert rec["test_type"] == "K"
 
 
 def test_catalog_lookup_case_insensitive(mock_catalog_path: Path) -> None:

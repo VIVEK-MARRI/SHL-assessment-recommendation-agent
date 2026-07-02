@@ -51,10 +51,10 @@ def _clean_json_markdown(text: str) -> str:
         text = text[7:]
     elif text.startswith("```"):
         text = text[3:]
-    
+
     if text.endswith("```"):
         text = text[:-3]
-        
+
     return text.strip()
 
 
@@ -103,13 +103,50 @@ class ResponseGenerator:
 
     def generate(self, package: PromptPackage) -> LLMGenerationResult:
         """Call the LLM and return a parsed LLMGenerationResult, with up to 1 retry."""
-        
+
+        # Issue 3: Short-circuit for COMPARE, RECOMMEND, and REFINE with unmatched assessment names.
+        # When ANY named assessment is not in the SHL catalog, return a deterministic
+        # reply without calling the LLM.
+        unmatched_in_recommend = []
+        if package.route in (RouteType.RECOMMEND, RouteType.REFINE) and package.mentioned_assessment_names:
+            grounded_names_lower = {a.name.lower() for a in package.grounding_assessments}
+            unmatched_in_recommend = [n for n in package.mentioned_assessment_names if n.lower() not in grounded_names_lower]
+
+        if (package.route == RouteType.COMPARE and package.unmatched_names) or unmatched_in_recommend:
+            not_found_list = package.unmatched_names if package.route == RouteType.COMPARE else unmatched_in_recommend
+            not_found = ", ".join(f"'{n}'" for n in not_found_list)
+            if package.grounding_assessments:
+                found_names = ", ".join(a.name for a in package.grounding_assessments)
+                reply = (
+                    f"The following assessment(s) do not appear in the SHL catalog: {not_found}. "
+                    f"I was able to find in the catalog: {found_names}. "
+                    "Would you like to compare with the closest available alternative, "
+                    "or would you like me to recommend relevant assessments instead?"
+                )
+            else:
+                reply = (
+                    f"The following assessment(s) do not appear in the SHL catalog: {not_found}. "
+                    "Please check the name(s) and try again, or let me recommend relevant assessments."
+                )
+            return LLMGenerationResult(
+                reply=reply,
+                recommended_names=[],
+                end_of_conversation=False,
+                provider="deterministic",
+                model="short-circuit",
+                latency_ms=0.0,
+                tokens_prompt=0,
+                tokens_completion=0,
+                tokens_total=0,
+                finish_reason="short_circuit",
+            )
+
         # Build the final prompt by injecting assessments
         system_prompt = package.system_prompt
-        
+
         if package.route in (RouteType.RECOMMEND, RouteType.COMPARE, RouteType.REFINE):
             context_parts = ["\nGROUNDING CONTEXT:"]
-            
+
             # Inject relationship notes first (before individual assessment listings)
             rel_parts: list[str] = []
             assessment_names = [a.name for a in package.grounding_assessments]
@@ -119,7 +156,7 @@ class ResponseGenerator:
             if relationship_notes:
                 rel_parts.append("\nRELATIONSHIP NOTES:")
                 rel_parts.append(relationship_notes)
-            
+
             # Inject unsupported technologies (skills with no dedicated assessment)
             if package.route in (RouteType.RECOMMEND, RouteType.REFINE):
                 last_user_msg = _extract_last_user_message(package.user_prompt)
@@ -133,7 +170,7 @@ class ResponseGenerator:
                     context_parts.append("")
                     context_parts.extend(ded_parts)
                     context_parts.append("")
-            
+
             # Inject unknown assessment names (user asked for specific names not in catalog)
             grounded_names_lower = {n.lower() for n in assessment_names}
             unknown_mentions: list[str] = []
@@ -147,8 +184,9 @@ class ResponseGenerator:
                 context_parts.append("")
                 context_parts.extend(unknown_parts)
                 context_parts.append("")
-            
-            # Inject unmatched names for COMPARE route
+
+            # Inject unmatched names for COMPARE route (already handled by short-circuit above,
+            # but keep for safety in case comparison_possible=True with partial matches)
             if package.route == RouteType.COMPARE and package.unmatched_names:
                 unmatched_parts: list[str] = ["\nNOT IN CATALOG:"]
                 for name in package.unmatched_names:
@@ -156,7 +194,7 @@ class ResponseGenerator:
                 context_parts.append("")
                 context_parts.extend(unmatched_parts)
                 context_parts.append("")
-            
+
             # Build individual assessment entries
             assessment_entries: list[str] = []
             for a in package.grounding_assessments:
@@ -172,35 +210,35 @@ class ResponseGenerator:
                 parts.append(f"Link: {a.link}")
                 parts.append("---")
                 assessment_entries.append("\n".join(parts))
-            
+
             if rel_parts:
                 context_parts.extend(rel_parts)
                 context_parts.append("")
-            
+
             context_parts.extend(assessment_entries)
-            
+
             if package.grounding_assessments:
                 system_prompt += "\n" + "\n".join(context_parts)
             else:
                 system_prompt += "\n\nGROUNDING CONTEXT:\nNone available."
-                
+
         # Always append system instructions
         system_prompt += "\n" + SYSTEM_INSTRUCTIONS.strip()
-        
+
         attempt = 1
         max_attempts = 2
         last_error = None
-        
+
         while attempt <= max_attempts:
             try:
                 result = self._client.generate(
                     system_prompt=system_prompt,
                     user_payload=package.user_prompt
                 )
-                
+
                 content = result["content"]
                 content = _clean_json_markdown(content)
-                
+
                 # Try parsing JSON
                 try:
                     parsed = json.loads(content)
@@ -208,7 +246,7 @@ class ResponseGenerator:
                         raise JSONGenerationError("LLM returned a JSON list instead of a dict")
                 except json.JSONDecodeError as exc:
                     raise JSONGenerationError(f"LLM returned invalid JSON: {exc}") from exc
-                
+
                 # Validate Schema
                 # Note: Validation for hallucinated names is NOT done here per instructions.
                 # Only structural validation via Pydantic.
@@ -232,7 +270,7 @@ class ResponseGenerator:
                         tokens_total=result["tokens_total"],
                         finish_reason=result["finish_reason"],
                     )
-                    
+
                     # Grounding override: if retrieval returned grounded assessments but LLM
                     # incorrectly says "not enough information", force a grounded response.
                     if (
@@ -284,6 +322,9 @@ class ResponseGenerator:
                             )
 
                     # Post-processing: legal compliance disclaimer
+                    # Issue 2: end_of_conversation must remain False for legal/compliance
+                    # questions — the disclaimer handler fires on CLARIFY too, so we force
+                    # end_of_conversation=False when the handler activates on non-RECOMMEND routes.
                     if package.route in (RouteType.RECOMMEND, RouteType.COMPARE, RouteType.CLARIFY, RouteType.REFINE):
                         last_user_msg = _extract_last_user_message(package.user_prompt)
                         if self._legal_handler.is_legal_compliance_question(last_user_msg):
@@ -293,7 +334,8 @@ class ResponseGenerator:
                             validated = LLMGenerationResult(
                                 reply=self._legal_handler.format_disclaimer_response(validated.reply),
                                 recommended_names=validated.recommended_names,
-                                end_of_conversation=validated.end_of_conversation,
+                                # Issue 2: legal questions are never end-of-conversation
+                                end_of_conversation=False,
                                 provider=validated.provider,
                                 model=validated.model,
                                 latency_ms=validated.latency_ms,
@@ -310,7 +352,7 @@ class ResponseGenerator:
                     extra_keys = set(parsed.keys()) - allowed_keys
                     if extra_keys:
                         raise JSONGenerationError(f"LLM returned extra fields: {extra_keys}")
-                        
+
                     return validated
                 except ValidationError as exc:
                     raise JSONGenerationError(f"LLM JSON violated schema: {exc}") from exc
@@ -329,7 +371,7 @@ class ResponseGenerator:
                     raise
             except GenerationError:
                 raise
-                
+
         # If we exhausted attempts
         if package.route == RouteType.REFUSE:
             logger.warning("Generation exhausted attempts for REFUSE route. Returning fallback.")
