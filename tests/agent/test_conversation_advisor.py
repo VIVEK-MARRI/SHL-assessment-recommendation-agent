@@ -1323,3 +1323,39 @@ class TestRecommendationExplanation:
         path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
         content = path.read_text(encoding="utf-8")
         assert "concise" in content.lower()
+
+
+# =========================================================================
+# 22. Catalog grounding
+# =========================================================================
+
+class TestCatalogGrounding:
+    """Tests for catalog grounding rules."""
+
+    def test_prompt_has_catalog_grounding_section(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "Catalog Grounding" in content
+
+    def test_factual_statements_from_catalog(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "factual statement" in content.lower()
+        assert "GROUNDING CONTEXT" in content
+
+    def test_no_model_memory(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "model memory" in content.lower()
+
+    def test_low_confidence_template(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "couldn't verify" in content.lower()
+        assert "SHL catalog" in content
+
+    def test_no_hallucinate_metadata(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "hallucinate" in content.lower()
+        assert "metadata" in content.lower()
