@@ -263,7 +263,7 @@ class ResponseGenerator:
                             )
 
                     # Post-processing: detect confirmation from last user message
-                    if package.route == RouteType.RECOMMEND:
+                    if package.route in (RouteType.RECOMMEND, RouteType.REFINE):
                         last_user_msg = _extract_last_user_message(package.user_prompt)
                         if self._confirmation_detector.is_confirmation(last_user_msg):
                             logger.info(
@@ -284,7 +284,7 @@ class ResponseGenerator:
                             )
 
                     # Post-processing: legal compliance disclaimer
-                    if package.route in (RouteType.RECOMMEND, RouteType.COMPARE, RouteType.CLARIFY):
+                    if package.route in (RouteType.RECOMMEND, RouteType.COMPARE, RouteType.CLARIFY, RouteType.REFINE):
                         last_user_msg = _extract_last_user_message(package.user_prompt)
                         if self._legal_handler.is_legal_compliance_question(last_user_msg):
                             logger.info(

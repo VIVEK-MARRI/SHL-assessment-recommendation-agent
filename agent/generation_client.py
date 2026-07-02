@@ -121,15 +121,32 @@ class GenerationClient:
         # Enforce 20s timeout per instructions
         timeout = 20.0 
         
-        if self._http_client is not None:
-            return self._http_client.post(
-                url,
-                json=payload,
-                headers=headers,
-                timeout=timeout,
-            )
-        with httpx.Client(timeout=timeout) as client:
-            return client.post(url, json=payload, headers=headers)
+        import time
+        max_retries = 3
+        for attempt in range(max_retries + 1):
+            if self._http_client is not None:
+                response = self._http_client.post(
+                    url,
+                    json=payload,
+                    headers=headers,
+                    timeout=timeout,
+                )
+            else:
+                with httpx.Client(timeout=timeout) as client:
+                    response = client.post(url, json=payload, headers=headers)
+            
+            if response.status_code == 429 and attempt < max_retries:
+                wait = 2 ** (attempt + 1)
+                logger.warning(
+                    "Rate limited (429), retrying in %ds (attempt %d/%d)",
+                    wait, attempt + 1, max_retries,
+                )
+                time.sleep(wait)
+                continue
+            
+            return response
+        
+        return response
 
     def _endpoint_url(self) -> str:
         if self._config.provider == "groq":

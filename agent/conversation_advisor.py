@@ -32,6 +32,9 @@ _CONFIRMATION_PATTERNS: list[re.Pattern[str]] = [
     re.compile(r"^\s*thanks?\s*[.!]*\s*$", re.IGNORECASE),
     re.compile(r"^\s*(that'?s|this\s+is)\s+(great|perfect|excellent|correct|right)\s*[.!]*\s*$", re.IGNORECASE),
     re.compile(r"^\s*make(?:s)?\s+sense\s*[.!]*\s*$", re.IGNORECASE),
+    re.compile(r"^\s*that'?s\s+all\s*[.!]*\s*$", re.IGNORECASE),
+    re.compile(r"^\s*confirmed\s*[.!]*\s*$", re.IGNORECASE),
+    re.compile(r"^\s*done\s*[.!]*\s*$", re.IGNORECASE),
 ]
 
 _TRADEOFF_PATTERNS: list[re.Pattern[str]] = [

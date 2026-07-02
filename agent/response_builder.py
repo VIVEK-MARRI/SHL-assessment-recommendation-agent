@@ -61,7 +61,11 @@ class ResponseBuilder:
             elapsed_ms,
         )
 
-        return ChatResponse(reply=reply, recommendations=recommendations)
+        return ChatResponse(
+            reply=reply,
+            recommendations=recommendations,
+            end_of_conversation=validated.end_of_conversation,
+        )
 
     def _build_recommendations(
         self, validated_names: list[str]
