@@ -1198,3 +1198,88 @@ class TestRecommendationRules:
         path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
         content = path.read_text(encoding="utf-8")
         assert "must exist" in content.lower()
+
+
+# =========================================================================
+# 20. Conversation refinement
+# =========================================================================
+
+class TestConversationRefinement:
+    """Tests for conversation refinement behavior (updating shortlists)."""
+
+    def test_recommendation_prompt_has_refinement_section(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "Refinement Behavior" in content
+        assert "Update the previous shortlist" in content
+
+    def test_refinement_preserves_context(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "Do not ignore previous context" in content
+
+    def test_refinement_keeps_consistent_constraints(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "Keep recommendations consistent with all active constraints" in content
+
+    def test_refinement_add_handling(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "adds a requirement" in content.lower()
+
+    def test_refinement_remove_handling(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "removes a requirement" in content.lower()
+
+    def test_refinement_replace_handling(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "replaces a requirement" in content.lower()
+
+    def test_state_extraction_refinement_replacement(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "state_extraction_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "REPLACEMENT refinements" in content
+        assert "Actually" in content
+
+    def test_state_extraction_refinement_additive(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "state_extraction_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "ADDITIVE refinements" in content
+        assert "Add" in content
+
+    def test_state_extraction_refinement_removal(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "state_extraction_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "REMOVAL refinements" in content
+        assert "Remove" in content
+
+    def test_refinement_route_for_replacement(self) -> None:
+        """REPLACEMENT refinements route to REFINE."""
+        from agent.conversation_models import ConversationState
+        from agent.router import RuleBasedRouter
+        router = RuleBasedRouter()
+        state = ConversationState(
+            role="Java Developer",
+            technical_skills=["Java"],
+            refinement_detected=True,
+        )
+        decision = router.route(state)
+        assert decision.route == RouteType.REFINE
+
+    def test_additive_does_not_set_refinement_detected(self) -> None:
+        """Additive refinements like 'Add Java' should NOT set refinement_detected."""
+        from agent.conversation_models import ConversationState
+        from agent.router import RuleBasedRouter
+        router = RuleBasedRouter()
+        # Simulate additive refinement — refinement_detected=False, merged state
+        state = ConversationState(
+            role="Developer",
+            technical_skills=["Python", "Java"],
+            refinement_detected=False,
+        )
+        decision = router.route(state)
+        assert decision.route != RouteType.REFINE
+        assert decision.route == RouteType.RECOMMEND
