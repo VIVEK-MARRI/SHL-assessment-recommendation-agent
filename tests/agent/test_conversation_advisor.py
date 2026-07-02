@@ -1152,3 +1152,49 @@ class TestLegalDisclaimer:
         content = path.read_text(encoding="utf-8")
         assert "legal" in content.lower()
         assert "explain what the assessment measures" in content.lower()
+
+
+# =========================================================================
+# 19. Recommendation rules
+# =========================================================================
+
+class TestRecommendationRules:
+    """Tests for the recommendation rules spec."""
+
+    def test_recommendation_prompt_has_count_range(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "between" in content.lower() and "10" in content
+
+    def test_recommendation_prompt_has_selection_criteria(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "Job role" in content
+        assert "Seniority" in content
+        assert "Technical skills" in content
+        assert "Personality needs" in content
+        assert "Cognitive requirements" in content
+        assert "Language constraints" in content
+        assert "Industry" in content
+        assert "User refinements" in content
+
+    def test_recommendation_prompt_ranks_by_relevance(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "most relevant" in content.lower()
+
+    def test_recommendation_prompt_no_unrelated(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "unrelated" in content.lower()
+
+    def test_recommendation_prompt_every_url_from_catalog(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "URL" in content
+        assert "catalog" in content.lower()
+
+    def test_recommendation_prompt_must_exist_in_catalog(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "must exist" in content.lower()
