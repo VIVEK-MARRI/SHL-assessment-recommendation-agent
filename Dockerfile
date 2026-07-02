@@ -37,7 +37,16 @@ COPY --from=builder /usr/local/bin/ /usr/local/bin/
 # Copy application source code (excluding files in .dockerignore)
 COPY . /app/
 
-# Ensure the non-root user owns the /app directory
+# Set Hugging Face cache directory to be within /app so it gets baked into the image
+ENV HF_HOME=/app/.cache/huggingface \
+    TRANSFORMERS_CACHE=/app/.cache/huggingface
+
+# Generate the BM25 and FAISS indexes during the build phase.
+# This ensures they are present in the final image and that the embedding model is downloaded and cached.
+RUN python scripts/build_bm25_index.py && \
+    python scripts/build_embedding_index.py
+
+# Ensure the non-root user owns the /app directory (including generated indexes and cache)
 RUN chown -R appuser:appuser /app
 
 # Switch to the non-root user
