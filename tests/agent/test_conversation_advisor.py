@@ -866,3 +866,72 @@ class TestUnknownAssessmentHandling:
         )
         result = generator.generate(package)
         assert result.reply is not None
+
+
+# =========================================================================
+# 16. Unsupported technology handling
+# =========================================================================
+
+class TestUnsupportedTechnologyHandling:
+    """Tests for the unsupported technology spec."""
+
+    def test_recommendation_prompt_has_unsupported_tech_template(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "There isn't a dedicated" in content
+        assert "SHL catalog" in content
+        assert "explain why each is relevant" in content.lower()
+
+    def test_find_unsupported_technologies_returns_rust(self) -> None:
+        handler = CatalogLimitationHandler()
+        result = handler.find_unsupported_technologies(
+            "I need Rust assessments",
+            ["Python (New)", "C Programming (New)"],
+        )
+        assert "rust" in [r.lower() for r in result]
+
+    def test_find_unsupported_technologies_identifies_supported(self) -> None:
+        handler = CatalogLimitationHandler()
+        result = handler.find_unsupported_technologies(
+            "I need Python assessments",
+            ["Python (New)", "C Programming (New)"],
+        )
+        rust_like = [r for r in result if r.lower() == "python"]
+        assert len(rust_like) == 0
+
+    def test_find_unsupported_technologies_go(self) -> None:
+        handler = CatalogLimitationHandler()
+        result = handler.find_unsupported_technologies(
+            "I need Go assessments",
+            ["Python (New)", "C Programming (New)"],
+        )
+        assert "go" in [r.lower() for r in result]
+
+    def test_unsupported_tech_injects_no_dedicated_assessment(self) -> None:
+        """When unsupported technology is detected, a NO DEDICATED ASSESSMENT section is injected."""
+        client = _make_simple_client(
+            '{"reply": "There is no dedicated assessment.", "recommended_names": ["C Programming (New)"], "end_of_conversation": false}'
+        )
+        generator = ResponseGenerator(client=client)
+        package = PromptPackage(
+            system_prompt="You are an SHL consultant.",
+            user_prompt="User:\nI need Rust assessments",
+            route=RouteType.RECOMMEND,
+            mentioned_assessment_names=[],
+            grounding_assessments=[
+                GroundingAssessment(
+                    name="C Programming (New)",
+                    description="C programming test",
+                    duration="30 min",
+                    job_levels=["Mid"],
+                    languages=["English"],
+                    remote=True,
+                    adaptive=False,
+                    test_type=["Knowledge"],
+                    link="http://c",
+                ),
+            ],
+            metadata=PromptMetadata(prompt_version="1.0", route=RouteType.RECOMMEND.value),
+        )
+        result = generator.generate(package)
+        assert result.reply is not None

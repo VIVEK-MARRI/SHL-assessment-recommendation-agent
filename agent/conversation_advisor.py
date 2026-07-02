@@ -282,6 +282,69 @@ class CatalogLimitationHandler:
         query_lower = query.lower().strip()
         return query_lower in self._resolver._name_index
 
+    def find_unsupported_technologies(
+        self, user_message: str, catalog_names: list[str]
+    ) -> list[str]:
+        """Find technologies/skills mentioned in user message with no dedicated catalog assessment.
+
+        Checks each word/phrase in the user message against catalog item names.
+        Returns technologies that appear to be specific skill requests without
+        a matching dedicated assessment.
+        """
+        self._resolver.load()
+        catalog_lower = {n.lower() for n in catalog_names}
+        # Also include individual significant words from catalog names
+        catalog_words: set[str] = set()
+        for name in catalog_lower:
+            for word in re.findall(r"[a-zA-Z][a-zA-Z0-9+#.]+", name):
+                if len(word) > 2:
+                    catalog_words.add(word.lower())
+
+        # Extract potential technology mentions from user message
+        # Look for patterns like "I need X", "assessments for X", "X assessment"
+        message_lower = user_message.lower()
+        
+        # First check: extract noun phrases that might be technology names
+        # Simple heuristic: look for words after "need", "for", "in" that aren't stopwords
+        stopwords = {
+            "the", "a", "an", "this", "that", "these", "those", "it", "its",
+            "some", "any", "all", "each", "every", "both", "few", "several",
+            "assessments", "assessment", "test", "tests", "hiring", "hire",
+            "looking", "need", "needs", "wanted", "like", "would", "could",
+            "please", "help", "me", "us", "our", "we", "i", "you", "your",
+            "about", "with", "from", "have", "has", "had", "get", "got",
+            "know", "knows", "known", "using", "use", "used", "does", "do",
+        }
+        
+        words = re.findall(r"[a-zA-Z][a-zA-Z0-9+#.]+", message_lower)
+        potential_techs: list[str] = []
+        for word in words:
+            w = word.lower().strip(".")
+            if w not in stopwords and len(w) >= 2:
+                potential_techs.append(w)
+
+        # Check each potential technology against catalog
+        unsupported: list[str] = []
+        for tech in potential_techs:
+            # If it directly matches a catalog name, it has a dedicated assessment
+            if tech in catalog_lower:
+                continue
+            # If it appears as a significant word in any catalog name, it might be supported
+            tech_stem = tech.lower().strip("s")  # Simple plural handling
+            if tech_stem in catalog_words or tech in catalog_words:
+                continue
+            unsupported.append(tech)
+
+        # Deduplicate while preserving order
+        seen: set[str] = set()
+        result: list[str] = []
+        for tech in unsupported:
+            t = tech.lower()
+            if t not in seen:
+                seen.add(t)
+                result.append(tech)
+        return result
+
 
 # ---------------------------------------------------------------------------
 # ClarificationAnalyzer

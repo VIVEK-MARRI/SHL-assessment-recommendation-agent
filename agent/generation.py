@@ -7,6 +7,7 @@ import re
 from pydantic import ValidationError
 
 from agent.conversation_advisor import (
+    CatalogLimitationHandler,
     CatalogRelationshipResolver,
     ConfirmationDetector,
 )
@@ -96,6 +97,7 @@ class ResponseGenerator:
         self._client = client or GenerationClient()
         self._relationship_resolver = CatalogRelationshipResolver()
         self._confirmation_detector = ConfirmationDetector()
+        self._catalog_limitation_handler = CatalogLimitationHandler()
 
     def generate(self, package: PromptPackage) -> LLMGenerationResult:
         """Call the LLM and return a parsed LLMGenerationResult, with up to 1 retry."""
@@ -115,6 +117,20 @@ class ResponseGenerator:
             if relationship_notes:
                 rel_parts.append("\nRELATIONSHIP NOTES:")
                 rel_parts.append(relationship_notes)
+            
+            # Inject unsupported technologies (skills with no dedicated assessment)
+            if package.route in (RouteType.RECOMMEND, RouteType.REFINE):
+                last_user_msg = _extract_last_user_message(package.user_prompt)
+                unsupported_techs = self._catalog_limitation_handler.find_unsupported_technologies(
+                    last_user_msg, assessment_names
+                )
+                if unsupported_techs:
+                    ded_parts: list[str] = ["\nNO DEDICATED ASSESSMENT:"]
+                    for tech in unsupported_techs:
+                        ded_parts.append(f"- {tech}")
+                    context_parts.append("")
+                    context_parts.extend(ded_parts)
+                    context_parts.append("")
             
             # Inject unknown assessment names (user asked for specific names not in catalog)
             grounded_names_lower = {n.lower() for n in assessment_names}
