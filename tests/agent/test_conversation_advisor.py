@@ -1405,3 +1405,71 @@ class TestConversationCompletion:
         path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
         content = path.read_text(encoding="utf-8")
         assert "Lock the final recommendations" in content
+
+
+# =========================================================================
+# 24. Robustness rules
+# =========================================================================
+
+class TestRobustnessRules:
+    """Tests for robustness and safety rules."""
+
+    def test_prompt_has_robustness_section(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "Robustness Rules" in content
+
+    def test_no_invent_catalog_items(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "Invent catalog items" in content or "invent catalog" in content.lower()
+
+    def test_no_invent_urls(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "Invent URLs" in content or "invent URLs" in content.lower()
+
+    def test_no_outside_shl_catalog(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "SHL Individual Test Solutions catalog" in content
+
+    def test_no_prompt_injection(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "prompt injection" in content.lower()
+
+    def test_no_unrelated_questions(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "unrelated" in content.lower()
+
+    def test_no_ignore_history(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "conversation history" in content.lower()
+
+    def test_no_discard_refinements(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "discard refinements" in content.lower()
+
+    def test_always_shl_domain(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "SHL assessment domain" in content
+
+    def test_always_preserve_context(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "preserve" in content.lower()
+
+    def test_always_use_catalog_data(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "retrieved catalog data" in content.lower()
+
+    def test_gracefully_refuse(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "gracefully refuse" in content.lower()
