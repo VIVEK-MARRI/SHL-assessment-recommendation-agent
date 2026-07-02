@@ -1359,3 +1359,49 @@ class TestCatalogGrounding:
         content = path.read_text(encoding="utf-8")
         assert "hallucinate" in content.lower()
         assert "metadata" in content.lower()
+
+
+# =========================================================================
+# 23. Conversation completion
+# =========================================================================
+
+class TestConversationCompletion:
+    """Tests for conversation completion (end_of_conversation) rules."""
+
+    def test_prompt_has_completion_section(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "Conversation Completion" in content
+
+    def test_end_false_during_clarify(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "end_of_conversation to false" in content
+        assert "Clarifying" in content
+
+    def test_end_false_during_compare(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "Comparing" in content
+
+    def test_end_false_during_refine(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "Refining" in content
+
+    def test_end_true_on_confirmation(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "end_of_conversation to true" in content
+        assert "confirms" in content.lower()
+
+    def test_end_true_on_complete(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "Thanks" in content or "That's all" in content
+        assert "Confirmed" in content or "Done" in content
+
+    def test_lock_recommendations(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "Lock the final recommendations" in content
