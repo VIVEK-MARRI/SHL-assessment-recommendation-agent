@@ -1283,3 +1283,43 @@ class TestConversationRefinement:
         decision = router.route(state)
         assert decision.route != RouteType.REFINE
         assert decision.route == RouteType.RECOMMEND
+
+
+# =========================================================================
+# 21. Recommendation explanation style
+# =========================================================================
+
+class TestRecommendationExplanation:
+    """Tests for recommendation explanation style spec."""
+
+    def test_prompt_says_briefly_explain(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "briefly explain" in content.lower()
+
+    def test_prompt_says_avoid_generic(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "avoid generic" in content.lower()
+
+    def test_prompt_says_explain_relevance(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "explain relevance" in content.lower()
+
+    def test_prompt_has_spring_example(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "Spring (New)" in content
+        assert "enterprise Java" in content
+
+    def test_prompt_has_verify_example(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "Verify G+" in content
+        assert "reasoning ability" in content
+
+    def test_prompt_says_keep_concise(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "concise" in content.lower()
