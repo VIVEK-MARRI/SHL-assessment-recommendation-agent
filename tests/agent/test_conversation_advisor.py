@@ -935,3 +935,73 @@ class TestUnsupportedTechnologyHandling:
         )
         result = generator.generate(package)
         assert result.reply is not None
+
+
+# =========================================================================
+# 17. Clarification strategy spec
+# =========================================================================
+
+class TestClarificationStrategy:
+    """Tests for the clarification strategy spec."""
+
+    def test_state_extraction_prompt_has_spec_examples(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "state_extraction_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "I need an assessment" in content
+        assert "Recommend something" in content
+        assert "Hiring engineers" in content
+        assert "Recommend Java assessments" in content
+        assert "Recommend SQL tests" in content
+        assert "Recommend assessments for graduates" in content
+        assert "Recommend personality assessments" in content
+
+    def test_clarification_prompt_minimizes_turns(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "clarification_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "Minimize conversational turns" in content
+        assert "exactly ONE" in content
+
+    def test_vague_role_clarifies(self) -> None:
+        """A bare role with clarification_needed=True routes to CLARIFY."""
+        from agent.conversation_models import ConversationState
+        from agent.router import RuleBasedRouter
+        router = RuleBasedRouter()
+        state = ConversationState(role="Engineers", clarification_needed=True)
+        decision = router.route(state)
+        assert decision.route == RouteType.CLARIFY
+
+    def test_specific_skill_does_not_clarify(self) -> None:
+        """Technical skills are sufficient even with clarification_needed."""
+        from agent.conversation_models import ConversationState
+        from agent.router import RuleBasedRouter
+        router = RuleBasedRouter()
+        state = ConversationState(technical_skills=["Java"], clarification_needed=True)
+        decision = router.route(state)
+        assert decision.route == RouteType.RECOMMEND
+
+    def test_role_with_skills_does_not_clarify(self) -> None:
+        """Role + skills is sufficient even with clarification_needed=True."""
+        from agent.conversation_models import ConversationState
+        from agent.router import RuleBasedRouter
+        router = RuleBasedRouter()
+        state = ConversationState(role="Engineer", technical_skills=["Python"], clarification_needed=True)
+        decision = router.route(state)
+        assert decision.route == RouteType.RECOMMEND
+
+    def test_personality_required_does_not_clarify(self) -> None:
+        """Personality flag alone routes to RECOMMEND via Step 5."""
+        from agent.conversation_models import ConversationState
+        from agent.router import RuleBasedRouter
+        router = RuleBasedRouter()
+        state = ConversationState(personality_required=True)
+        decision = router.route(state)
+        assert decision.route == RouteType.RECOMMEND
+
+    def test_role_only_no_clarification_flag_recommends(self) -> None:
+        """Role only without clarification_needed routes to RECOMMEND."""
+        from agent.conversation_models import ConversationState
+        from agent.router import RuleBasedRouter
+        router = RuleBasedRouter()
+        state = ConversationState(role="Engineer")
+        decision = router.route(state)
+        assert decision.route == RouteType.RECOMMEND

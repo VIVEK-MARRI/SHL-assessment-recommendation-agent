@@ -177,4 +177,15 @@ class RuleBasedRouter:
 
     @staticmethod
     def _is_sufficient_information(state: ConversationState) -> bool:
-        return bool(state.role) or bool(state.technical_skills)
+        # When the LLM explicitly flags clarification_needed, respect it unless
+        # specific technical skills are present. A bare role without skills or
+        # other context (e.g. "Hiring engineers") is not sufficient.
+        if state.clarification_needed and not state.technical_skills:
+            return False
+        return (
+            bool(state.role)
+            or bool(state.technical_skills)
+            or state.personality_required
+            or state.cognitive_required
+            or state.simulation_required
+        )

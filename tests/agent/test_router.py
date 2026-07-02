@@ -131,8 +131,8 @@ def test_clarification_priority(router):
     # role missing -> role
     assert router.route(ConversationState(clarification_needed=True)).clarification_field == "role"
     
-    # role present is enough signal to recommend immediately
-    assert router.route(ConversationState(clarification_needed=True, role="X")).route == RouteType.RECOMMEND
+    # role alone with clarification_needed is NOT sufficient (vague "Hiring engineers")
+    assert router.route(ConversationState(clarification_needed=True, role="X")).route == RouteType.CLARIFY
     
     # technical skill present is enough signal to recommend immediately
     assert router.route(ConversationState(clarification_needed=True, technical_skills=["Python"])).route == RouteType.RECOMMEND

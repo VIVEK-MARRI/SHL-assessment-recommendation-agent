@@ -48,7 +48,25 @@ TRADEOFF DETECTION: If the user asks "Do I really need X?", "Is X necessary?", o
 
 CONVERSATION GOAL: Extract the user's underlying goal. Examples: "hire python developer", "compare assessments", "find leadership assessment", "confirmed" (when user confirms they're satisfied).
 
-Set clarification_needed to true ONLY when the hiring requirement is completely vague and lacks enough information to continue (e.g., "I need an assessment.", "Recommend something.", "I'm hiring."). Do NOT set it to true if the user specifies a distinct role, technology, or skill (e.g., "Python assessment", "Hiring Java developers", "Assessment for Senior Data Scientists", "Hiring a backend engineer").
+Set clarification_needed to true ONLY when the hiring requirement is completely vague and lacks enough information to continue.
+
+Examples requiring clarification:
+- "I need an assessment."
+- "Recommend something."
+- "Hiring engineers." (vague role alone — what kind? what level?)
+
+Examples NOT requiring clarification (recommend immediately):
+- "Compare OPQ32r and Verify." (comparison)
+- "Explain GSA." (specific assessment name)
+- "Recommend Java assessments." (specific skill)
+- "Recommend SQL tests." (specific skill)
+- "Recommend assessments for graduates." (specific seniority)
+- "Recommend personality assessments." (specific assessment type)
+- "Assessment for Senior Data Scientists." (role + seniority)
+- "Hiring a backend engineer." (specific role)
+- "Python assessment." (specific skill)
+
+Do NOT set clarification_needed to true if the user specifies a distinct role, technology, skill, seniority, assessment type, or assessment name.
 
 Never store or generate recommendations, URLs, catalog records, retrieved assessments, prompt text, LLM responses, or retrieval results.
 
