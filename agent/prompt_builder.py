@@ -129,6 +129,7 @@ class PromptBuilder:
                 if template_route == RouteType.COMPARE and comparison_context is not None
                 else []
             ),
+            mentioned_assessment_names=state.mentioned_assessment_names,
             metadata=metadata
         )
 

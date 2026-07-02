@@ -763,3 +763,106 @@ class TestComparisonSpecCompliance:
         assert len(ctx.matched_assessments) >= 2
         assert "FakeAssessmentThatDoesNotExist" in ctx.unmatched_names
         assert ctx.comparison_possible is True
+
+
+# =========================================================================
+# 15. Unknown assessment handling (RECOMMEND route)
+# =========================================================================
+
+class TestUnknownAssessmentHandling:
+    """Tests that unknown assessment names are properly handled in RECOMMEND."""
+
+    def test_recommendation_prompt_has_spec_template(self) -> None:
+        path = Path(__file__).resolve().parent.parent.parent / "agent" / "prompts" / "recommendation_prompt.txt"
+        content = path.read_text(encoding="utf-8")
+        assert "couldn't find" in content.lower()
+        assert "SHL Individual Test Solution" in content
+        assert "closest relevant assessments" in content.lower()
+
+    def test_unknown_assessment_injects_not_in_catalog(self) -> None:
+        """When mentioned_assessment_names contains items not in grounding,
+        a NOT IN CATALOG section is injected into the prompt context."""
+        client = _make_simple_client(
+            '{"reply": "I could not find it.", "recommended_names": ["Python (New)"], "end_of_conversation": false}'
+        )
+        generator = ResponseGenerator(client=client)
+        package = PromptPackage(
+            system_prompt="You are an SHL consultant.",
+            user_prompt="User:\nI need Hogwarts Wizard Assessment",
+            route=RouteType.RECOMMEND,
+            mentioned_assessment_names=["Hogwarts Wizard Assessment"],
+            grounding_assessments=[
+                GroundingAssessment(
+                    name="Python (New)",
+                    description="Python programming test",
+                    duration="30 min",
+                    job_levels=["Mid"],
+                    languages=["English"],
+                    remote=True,
+                    adaptive=False,
+                    test_type=["Knowledge"],
+                    link="http://python",
+                ),
+            ],
+            metadata=PromptMetadata(prompt_version="1.0", route=RouteType.RECOMMEND.value),
+        )
+        result = generator.generate(package)
+        assert result.reply is not None
+
+    def test_known_assessment_no_not_in_catalog(self) -> None:
+        """When all mentioned assessments are in grounding, no NOT IN CATALOG note."""
+        client = _make_simple_client(
+            '{"reply": "Here are the assessments.", "recommended_names": ["Python (New)"], "end_of_conversation": false}'
+        )
+        generator = ResponseGenerator(client=client)
+        package = PromptPackage(
+            system_prompt="You are an SHL consultant.",
+            user_prompt="User:\nI need Python (New)",
+            route=RouteType.RECOMMEND,
+            mentioned_assessment_names=["Python (New)"],
+            grounding_assessments=[
+                GroundingAssessment(
+                    name="Python (New)",
+                    description="Python programming test",
+                    duration="30 min",
+                    job_levels=["Mid"],
+                    languages=["English"],
+                    remote=True,
+                    adaptive=False,
+                    test_type=["Knowledge"],
+                    link="http://python",
+                ),
+            ],
+            metadata=PromptMetadata(prompt_version="1.0", route=RouteType.RECOMMEND.value),
+        )
+        result = generator.generate(package)
+        assert result.reply is not None
+
+    def test_unknown_assessment_during_refine(self) -> None:
+        """Unknown assessment handling also applies to REFINE route."""
+        client = _make_simple_client(
+            '{"reply": "Updated results.", "recommended_names": ["C Programming (New)"], "end_of_conversation": false}'
+        )
+        generator = ResponseGenerator(client=client)
+        package = PromptPackage(
+            system_prompt="You are an SHL consultant.",
+            user_prompt="User:\nActually I need Rust Assessment",
+            route=RouteType.REFINE,
+            mentioned_assessment_names=["Rust Assessment"],
+            grounding_assessments=[
+                GroundingAssessment(
+                    name="C Programming (New)",
+                    description="C programming test",
+                    duration="30 min",
+                    job_levels=["Mid"],
+                    languages=["English"],
+                    remote=True,
+                    adaptive=False,
+                    test_type=["Knowledge"],
+                    link="http://c",
+                ),
+            ],
+            metadata=PromptMetadata(prompt_version="1.0", route=RouteType.REFINE.value),
+        )
+        result = generator.generate(package)
+        assert result.reply is not None

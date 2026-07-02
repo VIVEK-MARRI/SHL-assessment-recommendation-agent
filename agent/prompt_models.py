@@ -33,4 +33,5 @@ class PromptPackage(BaseModel):
     route: RouteType
     grounding_assessments: list[GroundingAssessment] = Field(default_factory=list)
     unmatched_names: list[str] = Field(default_factory=list)
+    mentioned_assessment_names: list[str] = Field(default_factory=list)
     metadata: PromptMetadata

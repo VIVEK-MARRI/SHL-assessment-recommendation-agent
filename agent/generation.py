@@ -116,7 +116,21 @@ class ResponseGenerator:
                 rel_parts.append("\nRELATIONSHIP NOTES:")
                 rel_parts.append(relationship_notes)
             
-            # Inject unmatched names for COMPARE route (assessments user asked about not in catalog)
+            # Inject unknown assessment names (user asked for specific names not in catalog)
+            grounded_names_lower = {n.lower() for n in assessment_names}
+            unknown_mentions: list[str] = []
+            for name in package.mentioned_assessment_names:
+                if name.lower() not in grounded_names_lower:
+                    unknown_mentions.append(name)
+            if unknown_mentions:
+                unknown_parts: list[str] = ["\nNOT IN CATALOG:"]
+                for name in unknown_mentions:
+                    unknown_parts.append(f"- {name}")
+                context_parts.append("")
+                context_parts.extend(unknown_parts)
+                context_parts.append("")
+            
+            # Inject unmatched names for COMPARE route
             if package.route == RouteType.COMPARE and package.unmatched_names:
                 unmatched_parts: list[str] = ["\nNOT IN CATALOG:"]
                 for name in package.unmatched_names:
